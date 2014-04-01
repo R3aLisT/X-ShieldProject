@@ -212,7 +212,7 @@ void CUser::Regene(uint8 regene_type, uint32 magicid /*= 0*/)
 		// have any national points.
 		if (GetLoyalty() == 0 
 			&& (GetMap()->isWarZone()
-			|| isInPKZone()))
+			|| isInPKZone() || Event()))
 			KickOutZoneUser();
 	}
 }

@@ -301,7 +301,24 @@ bool CUser::CanChangeZone(C3DMap * pTargetMap, WarpListResponse & errorReason)
 			errorReason = WarpListNeedNP;
 			return false;
 		}
+		case ZONE_KROWAZ_DOMINION:
+		if (g_pMain->m_byBattleOpen != NO_BATTLE)
+		{
+			errorReason = WarpListNotDuringWar;
+			return false;
+		}
 
+		if (GetLevel() > MIN_LEVEL_KROWAZ_DOMINION)
+		{
+			errorReason = WarpListDoNotQualify;
+			return false;
+		}
+
+		if (GetLoyalty() <= 0)
+		{
+			errorReason = WarpListNeedNP;
+			return false;
+		}
 		return true;
 
 	case ZONE_RONARK_LAND:

@@ -365,7 +365,7 @@ public:
 	INLINE bool isWeaponsDisabled() { return m_bWeaponsDisabled; }
 
 	INLINE bool isInPKZone() {  return GetZoneID() == ZONE_ARDREAM || GetZoneID() == ZONE_RONARK_LAND || GetZoneID() == ZONE_RONARK_LAND_BASE; }
-
+	INLINE bool Event() {  return GetZoneID() == ZONE_KROWAZ_DOMINION || GetZoneID() == ZONE_FELANKOR_ARENA; }
 	INLINE int8 GetMerchantState() { return m_bMerchantState; }
 
 	INLINE uint8 GetAuthority() { return m_bAuthority; }
