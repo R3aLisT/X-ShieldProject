@@ -388,7 +388,7 @@ COMMAND_HANDLER(CUser::HandleGiveItemCommand)
 	if (vargs.size() < 2)
 	{
 		// send description
-		g_pMain->SendHelpDescription(this, "Using Sample : +give_item CharacterName ItemID StackSize");
+		g_pMain->SendHelpDescription(this, "Example : +give_item CharacterName ItemID Count");
 		return true;
 	}
 
@@ -432,7 +432,7 @@ COMMAND_HANDLER(CUser::HandleZoneChangeCommand)
 	if (vargs.empty())
 	{
 		// send description
-		g_pMain->SendHelpDescription(this, "Using Sample : +zonechange ZoneNumber");
+		g_pMain->SendHelpDescription(this, "Example : +zonechange ZoneNumber");
 		return true;
 	}
 
@@ -450,7 +450,7 @@ COMMAND_HANDLER(CUser::HandleMonsterSummonCommand)
 	if (vargs.empty())
 	{
 		// send description
-		g_pMain->SendHelpDescription(this, "Using Sample : +monsummon MonsterSID");
+		g_pMain->SendHelpDescription(this, "Example : +monsummon MonsterSID");
 		return true;
 	}
 
@@ -468,7 +468,7 @@ COMMAND_HANDLER(CUser::HandleNPCSummonCommand)
 	if (vargs.empty())
 	{
 		// send description
-		g_pMain->SendHelpDescription(this, "Using Sample : +npcsummon NPCSID");
+		g_pMain->SendHelpDescription(this, "Example : +npcsummon NPCSID");
 		return true;
 	}
 
@@ -486,7 +486,7 @@ COMMAND_HANDLER(CUser::HandleMonKillCommand)
 	if (GetTargetID() == 0 && GetTargetID() < NPC_BAND)
 	{
 		// send description
-		g_pMain->SendHelpDescription(this, "Using Sample : Select a NPC or Monster than use +monkills");
+		g_pMain->SendHelpDescription(this, "Example : Select a NPC or Monster than use +monkills");
 		return false;
 	}
 
@@ -538,7 +538,7 @@ COMMAND_HANDLER(CGameServerDlg::HandleKillUserCommand)
 	if (vargs.empty())
 	{
 		// send description
-		printf("Using Sample : +kill CharacterName\n");
+		printf("Exapmle Sample : +kill CharacterName\n");
 		return true;
 	}
 
@@ -546,7 +546,7 @@ COMMAND_HANDLER(CGameServerDlg::HandleKillUserCommand)
 	CUser *pUser = GetUserPtr(strUserID, TYPE_CHARACTER);
 	if (pUser == nullptr)
 	{
-		printf("Error : User is not online\n");
+		printf("Example : User is not online\n");
 		return true;
 	}
 
@@ -631,7 +631,7 @@ COMMAND_HANDLER(CUser::HandleLoyaltyChangeCommand)
 	if (vargs.size() < 2)
 	{
 		// send description
-		g_pMain->SendHelpDescription(this, "Using Sample : +np_change CharacterName Loyalty(+/-)");
+		g_pMain->SendHelpDescription(this, "Example : +np_change CharacterName Loyalty(+/-)");
 		return true;
 	}
 
@@ -662,7 +662,7 @@ COMMAND_HANDLER(CUser::HandleExpChangeCommand)
 	if (vargs.size() < 2)
 	{
 		// send description
-		g_pMain->SendHelpDescription(this, "Using Sample : +exp_change CharacterName Exp(+/-)");
+		g_pMain->SendHelpDescription(this, "Example : +exp_change CharacterName Exp(+/-)");
 		return true;
 	}
 
@@ -693,7 +693,7 @@ COMMAND_HANDLER(CUser::HandleGoldChangeCommand)
 	if (vargs.size() < 2)
 	{
 		// send description
-		g_pMain->SendHelpDescription(this, "Using Sample : +gold_change CharacterName Gold(+/-)");
+		g_pMain->SendHelpDescription(this, "Example : +gold_change CharacterName Gold(+/-)");
 		return true;
 	}
 
@@ -730,7 +730,7 @@ COMMAND_HANDLER(CUser::HandleExpAddCommand)
 	if (vargs.empty())
 	{
 		// send description
-		g_pMain->SendHelpDescription(this, "Using Sample : +exp_add Percent");
+		g_pMain->SendHelpDescription(this, "Example : +exp_add Percent");
 		return true;
 	}
 
@@ -754,7 +754,7 @@ COMMAND_HANDLER(CUser::HandleMoneyAddCommand)
 	if (vargs.empty())
 	{
 		// send description
-		g_pMain->SendHelpDescription(this, "Using Sample : +money_add Percent");
+		g_pMain->SendHelpDescription(this, "Example : +money_add Percent");
 		return true;
 	}
 
@@ -775,7 +775,7 @@ COMMAND_HANDLER(CGameServerDlg::HandlePermitConnectCommand)
 	if (vargs.size() < 1)
 	{
 		// send description
-		printf("Using Sample : +permitconnect CharacterName\n");
+		printf("Example : +permitconnect CharacterName\n");
 		return true;
 	}
 
@@ -801,7 +801,7 @@ COMMAND_HANDLER(CUser::HandleTeleportAllCommand)
 	if (vargs.size() < 1)
 	{
 		// send description
-		g_pMain->SendHelpDescription(this, "Using Sample : +tp_all ZoneNumber | +tp_all ZoneNumber TargetZoneNumber");
+		g_pMain->SendHelpDescription(this, "Example : +tp_all ZoneNumber | +tp_all ZoneNumber TargetZoneNumber");
 		return true;
 	}
 
@@ -832,7 +832,7 @@ COMMAND_HANDLER(CUser::HandleKnightsSummonCommand)
 	if(vargs.empty())
 	{
 		// Send description
-		g_pMain->SendHelpDescription(this, "Using Sample : +summonknights ClanName");
+		g_pMain->SendHelpDescription(this, "Example : +summonknights ClanName");
 		return true;
 	}
 
@@ -951,7 +951,7 @@ COMMAND_HANDLER(CGameServerDlg::HandleWarResultCommand)
 	if (vargs.size() < 1)
 	{
 		// send description
-		printf("Using Sample : +warresult 1/2 (KARUS/HUMAN)\n");
+		printf("Example : +warresult 1/2 (KARUS/HUMAN)\n");
 		return true;
 	}
 
