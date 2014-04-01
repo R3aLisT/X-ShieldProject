@@ -78,9 +78,9 @@ bool CGameServerDlg::Startup()
 
 	GetTimeFromIni();
 
-	if (!g_pMain->m_socketMgr.Listen(_LISTEN_PORT, MAX_USER))
+	if (!g_pMain->m_socketMgr.Listen(g_pMain->m_nGamePort, MAX_USER))
 	{
-		printf(_T("ERROR: Failed to listen on server port (%d)."), _LISTEN_PORT);
+		printf(_T("ERROR: Failed to listen on server port (%d)."), g_pMain->m_nGamePort);
 		return false;
 	}
 
@@ -266,8 +266,10 @@ void CGameServerDlg::GetTimeFromIni()
 	}
 
 	ini.GetString("AI_SERVER", "IP", "127.0.0.1", m_AIServerIP);
+	m_nAIPort = ini.GetInt("AI_SERVER", "PORT", 10020);
 	m_nGameMasterRHitDamage = ini.GetInt("SETTINGS","GAME_MASTER_R_HIT_DAMAGE", 30000);
-	m_nPvPMonumentItem = ini.GetInt("SETTINGS","Monument", 389200000);
+	m_nPvPMonumentItem = ini.GetInt("SETTINGS","MONUMENT", 389200000);
+	m_nGamePort = ini.GetInt("SETTINGS","PORT", 15001);
 	m_nBonusTimeInterval = ini.GetInt("BONUS","SITDOWN_TIME", 15);
 
 	for (int i = 0; i < BIFROST_EVENT_COUNT; i++)
@@ -737,7 +739,7 @@ void CGameServerDlg::AIServerConnect()
 	{
 		CAISocket *pSock = static_cast<CAISocket *>(itr->second);
 		bool bReconnecting = pSock->IsReconnecting();
-		if (!pSock->Connect(m_AIServerIP.c_str(), AI_SERVER_PORT)) // couldn't connect... let's leave you alone for now
+		if (!pSock->Connect(m_AIServerIP.c_str(), m_nAIPort)) // couldn't connect... let's leave you alone for now
 			continue;
 
 		// Connected! Now send the connection packet.

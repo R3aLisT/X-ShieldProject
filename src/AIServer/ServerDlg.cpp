@@ -78,7 +78,7 @@ bool CServerDlg::Startup()
 	//----------------------------------------------------------------------
 	//	Communication Part Initialize ...
 	//----------------------------------------------------------------------
-	if (!m_socketMgr.Listen(AI_SERVER_PORT, MAX_SOCKET))
+	if (!m_socketMgr.Listen(m_nAIPort, MAX_SOCKET))
 		return false;
 
 	//----------------------------------------------------------------------
@@ -814,6 +814,7 @@ void CServerDlg::GetServerInfoIni()
 	ini.GetString("ODBC", "GAME_DSN", "KO_GAME", m_strGameDSN, false);
 	ini.GetString("ODBC", "GAME_UID", "username", m_strGameUID, false);
 	ini.GetString("ODBC", "GAME_PWD", "password", m_strGamePWD, false);
+	m_nAIPort = ini.GetInt("AI_SERVER", "PORT", 10020);
 }
 
 void CServerDlg::SendSystemMsg(std::string & pMsg, int type)

@@ -320,7 +320,7 @@ public:
 
 	char	m_ppNotice[20][128];
 	std::string	m_AIServerIP;
-
+	std::string	m_AIPort;
 	NpcArray					m_arNpcArray;
 	ZoneArray					m_ZoneArray;
 	ItemtableArray				m_ItemtableArray;
@@ -402,7 +402,8 @@ public:
 	uint8	m_nPVPMonumentNation[MAX_ZONE_ID];
 	int32	m_nGameMasterRHitDamage;
 	int32	m_nPvPMonumentItem;
-
+	int16   m_nGamePort;
+	int16   m_nAIPort;
 	int32 m_nBonusTimeInterval;
 
 	uint16	m_nTempleEventRemainSeconds;

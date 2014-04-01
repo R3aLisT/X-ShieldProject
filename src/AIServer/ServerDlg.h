@@ -130,7 +130,7 @@ public:
 	uint16	m_iYear, m_iMonth, m_iDate, m_iHour, m_iMin, m_iAmount;
 	uint8 m_iWeather;
 	bool m_bIsNight;
-
+	int16 m_nAIPort;
 	FastMutex m_userLock, m_npcThreadLock, m_eventThreadLock;
 
 	KOSocketMgr<CGameSocket> m_socketMgr;
