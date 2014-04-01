@@ -268,7 +268,7 @@ void CGameServerDlg::GetTimeFromIni()
 	ini.GetString("AI_SERVER", "IP", "127.0.0.1", m_AIServerIP);
 	m_nAIPort = ini.GetInt("AI_SERVER", "PORT", 10020);
 	m_nGameMasterRHitDamage = ini.GetInt("SETTINGS","GAME_MASTER_R_HIT_DAMAGE", 30000);
-	m_nPvPMonumentItem = ini.GetInt("SETTINGS","MONUMENT", 389200000);
+	m_nPvPMonumentItem = ini.GetInt("SETTINGS","MONUMENT", 379154000);
 	m_nGamePort = ini.GetInt("SETTINGS","PORT", 15001);
 	m_nBonusTimeInterval = ini.GetInt("BONUS","SITDOWN_TIME", 15);
 
