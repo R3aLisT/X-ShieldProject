@@ -1993,7 +1993,7 @@ void CGameServerDlg::ResetBattleZone()
 
 void CGameServerDlg::TempleEventTimer()
 {
-	return;
+	//return;
 	uint32 nHour = g_localTime.tm_hour;
 	uint32 nMinute = g_localTime.tm_min;
 

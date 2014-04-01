@@ -502,6 +502,9 @@ void CKnightsManager::ReqKnightsPacket(CUser* pUser, Packet & pkt)
 	case KNIGHTS_ALLLIST_REQ:
 		g_DBAgent.LoadKnightsAllList();
 		break;
+	case KNIGHTS_ALLY_CREATE:
+		ReqAllyCreate(pkt);
+		break;
 	case KNIGHTS_MARK_REGISTER:
 		ReqRegisterClanSymbol(pUser, pkt);
 		break;
@@ -685,7 +688,10 @@ void CKnightsManager::ReqKnightsList(Packet & pkt)
 	pKnights->m_byGrade = g_pMain->GetKnightsGrade(nPoints);
 	pKnights->m_byRanking = bRank;
 }
-
+void CKnightsManager::ReqAllyCreate(Packet & pkt)
+{
+	return;
+}
 void CKnightsManager::ReqRegisterClanSymbol(CUser *pUser, Packet & pkt)
 {
 	if (pUser == nullptr)

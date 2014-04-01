@@ -51,6 +51,7 @@ public:
 	static void ReqDestroyKnights(CUser* pUser, Packet & pkt);
 	static void ReqAllKnightsMember(CUser *pUser, Packet & pkt);
 	static void ReqKnightsList(Packet & pkt);
+	static void ReqAllyCreate(Packet & pkt);
 	static void ReqRegisterClanSymbol(CUser *pUser, Packet & pkt);
 	static void ReqUpdateGrade(Packet & pkt);
 	static void ReqDonateNP(CUser *pUser, Packet & pkt);
