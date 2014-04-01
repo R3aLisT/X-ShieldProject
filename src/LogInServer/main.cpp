@@ -11,7 +11,7 @@ BOOL WINAPI _ConsoleHandler(DWORD dwCtrlType);
 
 int main()
 {
-	SetConsoleTitle("LogIn Server for Knight Online v" STRINGIFY(__VERSION));
+	SetConsoleTitle("X-Shield Login Server v" STRINGIFY(__VERSION));
 
 #ifdef WIN32
 	// Override the console handler
