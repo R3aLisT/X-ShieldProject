@@ -14,7 +14,7 @@ bool g_bRunning = true;
 
 int main()
 {
-	SetConsoleTitle("Game Server for Knight Online v" STRINGIFY(__VERSION));
+	SetConsoleTitle("X-Shield GameServer v" STRINGIFY(__VERSION));
 
 #ifdef WIN32
 	// Override the console handler
