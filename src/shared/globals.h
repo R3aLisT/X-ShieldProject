@@ -6,7 +6,7 @@
 
 #define MAP_DIR				"./Map/"
 
-#define MAX_USER			3000
+#define MAX_USER			9000
 
 #define MAX_ID_SIZE			20
 #if __VERSION >= 1453
