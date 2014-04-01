@@ -401,6 +401,7 @@ public:
 	uint8   m_nBorderDefenseWarTime[BORDER_DEFENSE_WAR_EVENT_COUNT], m_nChaosTime[CHAOS_EVENT_COUNT];
 	uint8	m_nPVPMonumentNation[MAX_ZONE_ID];
 	int32	m_nGameMasterRHitDamage;
+	int32	m_nPvPMonumentItem;
 
 	int32 m_nBonusTimeInterval;
 

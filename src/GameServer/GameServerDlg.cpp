@@ -267,7 +267,7 @@ void CGameServerDlg::GetTimeFromIni()
 
 	ini.GetString("AI_SERVER", "IP", "127.0.0.1", m_AIServerIP);
 	m_nGameMasterRHitDamage = ini.GetInt("SETTINGS","GAME_MASTER_R_HIT_DAMAGE", 30000);
-
+	m_nPvPMonumentItem = ini.GetInt("SETTINGS","Monument", 389200000);
 	m_nBonusTimeInterval = ini.GetInt("BONUS","SITDOWN_TIME", 15);
 
 	for (int i = 0; i < BIFROST_EVENT_COUNT; i++)
