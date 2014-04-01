@@ -5,7 +5,5 @@ Knight Online Server
 * Project owner is twostars
 
 * Project Developers ;
-  - AKUMA  / Source Code [ Skype : ayhanaktas58 ]
-  - Eridia / Source Code [ Skype : ceridia ]
-  - bodom61 / LUA Scripts [ Skype : extasyspike ]
-  - katanatr / Database [ Skype : thyratr ]
+  - X-Laz  / Source Code [ Skype : X-Laz34 ]
+  - RBCAS / Source Code [ Skype : volkan_yng ]
