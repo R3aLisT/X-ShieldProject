@@ -164,7 +164,7 @@ enum InOutType
 #define ZONE_ISILOON_ARENA		93
 #define ZONE_FELANKOR_ARENA		94
 
-#define MAX_BATTLE_ZONE_USERS	150
+#define MAX_BATTLE_ZONE_USERS	3000
 
 // Zone level requirements (should really be in a database or something...)
 #define MIN_LEVEL_NATION_BASE		35
