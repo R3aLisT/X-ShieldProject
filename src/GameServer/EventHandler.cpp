@@ -78,13 +78,10 @@ void CUser::TempleProcess(Packet &pkt )
 
 void CUser::MonsterStoneProcess()
 {
-	uint32 nMonsterNum = myrand(0, g_pMain->m_MonsterSummonListZoneArray.GetSize());
-	_MONSTER_SUMMON_LIST_ZONE * pMonsterSummonListZone = g_pMain->m_MonsterSummonListZoneArray.GetData(nMonsterNum);
-
 	if(CheckExistItem(MONSTER_STONE,1))
 	{
 		RobItem(MONSTER_STONE,1);
-		ZoneChange(pMonsterSummonListZone->sSid,m_curx,m_curz);
+		ZoneChange(myrand(240,241) || myrand(242,243) || myrand(244,245) ,m_curx,m_curz);
 	}
 } 
 

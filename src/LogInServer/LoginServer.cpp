@@ -48,7 +48,7 @@ bool LoginServer::Startup()
 	printf("Latest version in database: %d\n", GetVersion());
 	InitPacketHandlers();
 
-	if (!m_socketMgr.Listen(_LISTEN_PORT, MAX_USER))
+	if (!m_socketMgr.Listen(m_nLoginPort, MAX_USER))
 	{
 		printf("ERROR: Failed to listen on server port.\n");
 		return false;
@@ -130,7 +130,7 @@ void LoginServer::GetInfoFromIni()
 	int nServerCount = ini.GetInt("SERVER_LIST", "COUNT", 1);
 	if (nServerCount <= 0) 
 		nServerCount = 1;
-
+	m_nLoginPort = ini.GetInt("SETTINGS","PORT", 15100);
 	char key[20]; 
 	_SERVER_INFO* pInfo = nullptr;
 
