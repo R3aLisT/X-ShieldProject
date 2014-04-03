@@ -488,7 +488,7 @@ struct _ITEM_EXCHANGE
 	uint16	sExchangeItemCount[ITEMS_IN_EXCHANGE_GROUP];
 };
 
-#define MAX_ITEMS_REQ_FOR_UPGRADE 8
+#define MAX_ITEMS_REQ_FOR_UPGRADE 30
 struct _ITEM_UPGRADE
 {
 	uint32	nIndex;
