@@ -81,7 +81,7 @@ void CUser::MonsterStoneProcess()
 	if(CheckExistItem(MONSTER_STONE,1))
 	{
 		RobItem(MONSTER_STONE,1);
-		ZoneChange(myrand(240,241) || myrand(242,243) || myrand(244,245) ,m_curx,m_curz);
+		ZoneChange(myrand(81,83),m_curx,m_curz);
 	}
 } 
 
