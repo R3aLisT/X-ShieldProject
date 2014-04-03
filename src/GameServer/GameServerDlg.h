@@ -1,3 +1,8 @@
+#pragma once
+
+#ifdef GAMESERVER
+
+
 #include "resource.h"
 #include "LuaEngine.h"
 
@@ -511,3 +516,7 @@ public:
 	COMMAND_HANDLER(HandlePermitConnectCommand);
 	COMMAND_HANDLER(HandleWarResultCommand);
 };
+
+extern CGameServerDlg * g_pMain;
+
+#endif
