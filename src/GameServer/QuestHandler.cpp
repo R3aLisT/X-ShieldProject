@@ -1,5 +1,6 @@
-#include "stdafx.h"
-#include "KnightsManager.h"
+#include "StdAfx.h"
+#include "EbenezerDlg.h"
+#include "User.h"
 
 void CUser::QuestDataRequest()
 {
@@ -43,23 +44,25 @@ void CUser::QuestV2PacketProcess(Packet & pkt)
 	uint8 opcode = pkt.read<uint8>();
 	uint32 nQuestID = pkt.read<uint32>();
 
-	CNpc *pNpc = g_pMain->GetNpcPtr(m_sEventNid);
+	CNpc *pNpc = g_pMain->m_arNpcArray.GetData(m_sEventNid);
 	_QUEST_HELPER * pQuestHelper = g_pMain->m_QuestHelperArray.GetData(nQuestID);
 	// Does this quest helper exist?
 	if (pQuestHelper == nullptr
 		// Does the quest NPC exist, and is it alive? 
-			|| pNpc == nullptr || pNpc->isDead()
-			// Are we even talking to this NPC?
-			|| pQuestHelper->sNpcId != pNpc->GetProtoID()
-			// Is this quest for this player's nation? NOTE: 3 indicates both (why not 0, I don't know)
-			|| (pQuestHelper->bNation != 3 && pQuestHelper->bNation != GetNation())
-			// Is the player's level high enough to do this quest?
-			|| (pQuestHelper->bLevel > GetLevel())
-			// Are we the correct class? NOTE: 5 indicates any class.
-			|| (pQuestHelper->bClass != 5 && !JobGroupCheck(pQuestHelper->bClass))
-			// Are we in the correct zone? NOTE: This isn't checked officially, may be for good reason.
-			|| GetZoneID() != pQuestHelper->bZone)
-			return;
+		|| pNpc == nullptr || pNpc->isDead()
+		// Are we even talking to this NPC?
+		|| pQuestHelper->sNpcId != pNpc->GetEntryID()
+		// Are we in range of this NPC?
+		|| !isInRange(pNpc, MAX_NPC_RANGE)
+		// Is this quest for this player's nation? NOTE: 3 indicates both (why not 0, I don't know)
+		|| (pQuestHelper->bNation != 3 && pQuestHelper->bNation != GetNation())
+		// Is the player's level high enough to do this quest?
+		|| (pQuestHelper->bLevel > GetLevel())
+		// Are we the correct class? NOTE: 5 indicates any class.
+		|| (pQuestHelper->bClass != 5 && !JobGroupCheck(pQuestHelper->bClass))
+		// Are we in the correct zone? NOTE: This isn't checked officially, may be for good reason.
+		|| GetZoneID() != pQuestHelper->bZone)
+		return;
 
 	// If we're the same min. level as the quest requires, 
 	// do we have the min. required XP? Seems kind of silly, but OK..
@@ -135,7 +138,7 @@ void CUser::SaveEvent(uint16 sQuestID, uint8 bQuestState)
 	if (bQuestState == 1
 		&& pQuestMonster != nullptr)
 	{
-		// TODO: Decipher this into more meaningful code. :p
+		// TO-DO: Decipher this into more meaningful code. :p
 		int16 v11 = ((int16)((uint32)(6711 * sQuestID) >> 16) >> 10) - (sQuestID >> 15);
 		int16 v12 = ((int16)((uint32)(5243 * (int16)(sQuestID - 10000 * v11)) >> 16) >> 3)
 			- ((int16)(sQuestID - 10000 * v11) >> 15);
@@ -181,7 +184,7 @@ void CUser::QuestV2MonsterCountAdd(uint16 sNpcID)
 	if (pQuestMonster == nullptr)
 		return;
 
-	// TODO: Implement obscure zone ID logic
+	// TO-DO: Implement obscure zone ID logic
 
 	for (int group = 0; group < QUEST_MOB_GROUPS; group++)
 	{
@@ -232,7 +235,7 @@ void CUser::QuestV2MonsterDataRequest()
 	m_sEventDataIndex = 
 		10000	*	QuestV2CheckMonsterCount(32005) +
 		100		*	QuestV2CheckMonsterCount(32006) +
-		QuestV2CheckMonsterCount(32007);
+					QuestV2CheckMonsterCount(32007);
 
 	// Lookup the current kill counts for each mob group in the active quest
 	m_bKillCounts[0] = QuestV2CheckMonsterCount(QUEST_KILL_GROUP1);
@@ -241,9 +244,9 @@ void CUser::QuestV2MonsterDataRequest()
 	m_bKillCounts[3] = QuestV2CheckMonsterCount(QUEST_KILL_GROUP4);
 
 	result	<< uint8(1)
-		<< m_sEventDataIndex
-		<< m_bKillCounts[0] << m_bKillCounts[1]
-	<< m_bKillCounts[2] << m_bKillCounts[3];
+			<< m_sEventDataIndex
+			<< m_bKillCounts[0] << m_bKillCounts[1]
+			<< m_bKillCounts[2] << m_bKillCounts[3];
 
 	Send(&result);
 }
@@ -269,7 +272,7 @@ void CUser::QuestV2CheckFulfill(_QUEST_HELPER * pQuestHelper)
 bool CUser::QuestV2RunEvent(_QUEST_HELPER * pQuestHelper, uint32 nEventID, int8 bSelectedReward /*= -1*/)
 {
 	// Lookup the corresponding NPC.
-	CNpc * pNpc = g_pMain->GetNpcPtr(m_sEventNid);
+	CNpc * pNpc = g_pMain->m_arNpcArray.GetData(m_sEventNid);
 	bool result = false;
 
 	// Make sure the NPC exists and is not dead (we should also check if it's in range)
@@ -291,7 +294,7 @@ bool CUser::QuestV2RunEvent(_QUEST_HELPER * pQuestHelper, uint32 nEventID, int8 
 }
 
 /* 
-These are called by quest scripts. 
+	These are called by quest scripts. 
 */
 
 void CUser::QuestV2SaveEvent(uint16 sQuestID)
@@ -318,10 +321,10 @@ void CUser::QuestV2ShowGiveItem(uint32 nUnk1, uint16 sUnk1,
 {
 	Packet result(WIZ_QUEST, uint8(10));
 	result	<< nUnk1 << sUnk1
-		<< nUnk2 << sUnk2
-		<< nUnk3 << sUnk3
-		<< nUnk4 << sUnk4
-		<< nUnk5 << sUnk5;
+			<< nUnk2 << sUnk2
+			<< nUnk3 << sUnk3
+			<< nUnk4 << sUnk4
+			<< nUnk5 << sUnk5;
 	Send(&result);
 }
 
@@ -373,11 +376,11 @@ uint8 CUser::CheckMonsterCount(uint8 bGroup)
 // First job change; you're a [novice], Harry!
 bool CUser::PromoteUserNovice()
 {
-	uint8 bNewClasses[] = { ClassWarriorNovice, ClassRogueNovice, ClassMageNovice, ClassPriestNovice };
-	uint8 bOldClass = GetClassType() - 1; // convert base class 1,2,3,4 to 0,1,2,3 to align with bNewClasses
+	uint8 bNewClasses[] = { 5, 7, 9, 11 };
+	uint8 bOldClass = (GetClass() % 100) - 1; // convert base class 1,2,3,4 to 0,1,2,3 to align with bNewClasses
 
 	// Make sure it's a beginner class.
-	if (!isBeginner())
+	if (bOldClass >= 4)
 		return false;
 
 	Packet result(WIZ_CLASS_CHANGE, uint8(6));
@@ -390,12 +393,12 @@ bool CUser::PromoteUserNovice()
 	// Change the class & update party.
 	result.clear();
 	result << uint8(2) << sNewClass;
-	ClassChange(result, false); // TODO: Clean this up. Shouldn't need to build a packet for this.
+	ClassChange(result, false); // TO-DO: Clean this up. Shouldn't need to build a packet for this.
 
 	// Update the clan.
 	result.clear();
 	result << uint16(0);
-	CKnightsManager::CurrentKnightsMember(this, result); // TODO: Clean this up too.
+	CKnightsManager::CurrentKnightsMember(this, result); // TO-DO: Clean this up too.
 	return true;
 }
 
@@ -403,10 +406,10 @@ bool CUser::PromoteUserNovice()
 bool CUser::PromoteUser()
 {
 	/* unlike the official, the checks & item removal should be handled in the script, not here */
-	uint8 bOldClass = GetClassType();
+	uint8 bOldClass = (GetClass() % 100);
 
-	// We must be a novice before we can be promoted to master.
-	if (!isNovice()) 
+	// If we're not dealing with a 'novice' class (5, 7, 9, 11 -- mastered class are +1 from here).
+	if (bOldClass != 5 && bOldClass != 7 && bOldClass != 9 && bOldClass != 11)
 		return false;
 
 	Packet result(WIZ_CLASS_CHANGE, uint8(6));
@@ -419,7 +422,7 @@ bool CUser::PromoteUser()
 	// Change the class & update party.
 	result.clear();
 	result << uint8(2) << sNewClass;
-	ClassChange(result, false); // TODO: Clean this up. Shouldn't need to build a packet for this.
+	ClassChange(result, false); // TO-DO: Clean this up. Shouldn't need to build a packet for this.
 
 	// use integer division to get from 5/7/9/11 (novice classes) to 1/2/3/4 (base classes)
 	uint8 bBaseClass = (bOldClass / 2) - 1; 
@@ -430,66 +433,6 @@ bool CUser::PromoteUser()
 	// Update the clan.
 	result.clear();
 	result << uint16(0);
-	CKnightsManager::CurrentKnightsMember(this, result); // TODO: Clean this up too.
+	CKnightsManager::CurrentKnightsMember(this, result); // TO-DO: Clean this up too.
 	return true;
 }
-
-void CUser::PromoteClan(ClanTypeFlag byFlag)
-{
-	if (!isInClan())
-		return;
-
-	CKnightsManager::UpdateKnightsGrade(GetClanID(), byFlag);
-}
-
-void CUser::SendClanPointChange(int32 nChangeAmount)
-{
-	if (!isInClan())
-		return;
-
-	CKnightsManager::UpdateClanPoint(GetClanID(), nChangeAmount);
-}
-
-uint8 CUser::GetClanGrade()
-{
-	if (!isInClan())
-		return 0;
-
-	CKnights * pClan = g_pMain->GetClanPtr(GetClanID());
-	if (pClan == nullptr)
-		return 0;
-
-	return pClan->m_byGrade;
-}
-
-uint32 CUser::GetClanPoint()
-{
-	if (!isInClan())
-		return 0;
-
-	CKnights * pClan = g_pMain->GetClanPtr(GetClanID());
-	if (pClan == nullptr)
-		return 0;
-
-	return pClan->m_nClanPointFund;
-}
-
-uint8 CUser::GetClanRank()
-{
-	if (!isInClan())
-		return ClanTypeNone;
-
-	CKnights * pClan = g_pMain->GetClanPtr(GetClanID());
-	if (pClan == nullptr)
-		return ClanTypeNone;
-
-	return pClan->m_byFlag;
-}
-
-uint8 CUser::GetBeefRoastVictory() { return g_pMain->m_BifrostVictory; }
-
-uint8 CUser::GetWarVictory() { return g_pMain->m_bVictory; }
-
-uint8 CUser::CheckMiddleStatueCapture() { return g_pMain->m_bMiddleStatueNation == GetNation() ? 1 : 0; }
-
-void CUser::MoveMiddleStatue() { Warp((GetNation() == KARUS ? DODO_CAMP_WARP_X : LAON_CAMP_WARP_X) + myrand(0, DODO_LAON_WARP_RADIUS) * 10,(GetNation() == KARUS ? DODO_CAMP_WARP_Z : LAON_CAMP_WARP_Z) + myrand(0, DODO_LAON_WARP_RADIUS) * 10); }
