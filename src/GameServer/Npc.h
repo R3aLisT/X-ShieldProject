@@ -63,6 +63,7 @@ public:
 	void PVPMonumentProcess(CUser *pUser);
 	void BattleMonumentProcess(CUser *pUser);
 	void NationMonumentProcess(CUser *pUser);
+	void WarMonumentProcess(CUser *pUser);
 	void OnRespawn();
 
 	bool isDead() { return m_NpcState == NPC_DEAD || m_iHP <= 0; };
