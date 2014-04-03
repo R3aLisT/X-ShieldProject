@@ -7,7 +7,7 @@ public:
 		: OdbcRecordset(dbConnection), m_pMap(pMap) {}
 
 	virtual tstring GetTableName() { return _T("ITEM"); }
-	virtual tstring GetColumns() { return _T("Num, strName, Kind, Slot, Race, Class, Damage, Delay, Range, Weight, Duration, BuyPrice, SellPrice, Ac, Countable, Effect1, Effect2, ReqLevel, ReqLevelMax, ReqRank, ReqTitle, ReqStr, ReqSta, ReqDex, ReqIntel, ReqCha, SellingGroup, ItemType, Hitrate, Evasionrate, DaggerAc, SwordAc, MaceAc, AxeAc, SpearAc, BowAc, FireDamage, IceDamage, LightningDamage, PoisonDamage, HPDrain, MPDamage, MPDrain, MirrorDamage, StrB, StaB, DexB, IntelB, ChaB, MaxHpB, MaxMpB, FireR, ColdR, LightningR, MagicR, PoisonR, CurseR"); }
+	virtual tstring GetColumns() { return _T("Num, Ext, strName, StrDesc, IconID, Kind, Slot, Race, Class, Damage, Delay, Range, Weight, Duration, BuyPrice, SellPrice, Ac, Countable, Effect1, Effect2, ReqLevel, ReqLevelMax, ReqRank, ReqTitle, ReqStr, ReqSta, ReqDex, ReqIntel, ReqCha, SellingGroup, ItemType, Hitrate, Evasionrate, DaggerAc, SwordAc, MaceAc, AxeAc, SpearAc, BowAc, FireDamage, IceDamage, LightningDamage, PoisonDamage, HPDrain, MPDamage, MPDrain, MirrorDamage, StrB, StaB, DexB, IntelB, ChaB, MaxHpB, MaxMpB, FireR, ColdR, LightningR, MagicR, PoisonR, CurseR, ItemClass, ItemSetID, GiveItem"); }
 
 	virtual bool Fetch()
 	{
@@ -15,7 +15,10 @@ public:
 
 		int i = 1;
 		_dbCommand->FetchUInt32(i++, pData->m_iNum);
+		_dbCommand->FetchByte(i++, pData->m_bExt);
 		_dbCommand->FetchString(i++, pData->m_sName);
+		_dbCommand->FetchString(i++, pData->m_sDesc);
+		_dbCommand->FetchByte(i++, pData->m_bIconID);
 		_dbCommand->FetchByte(i++, pData->m_bKind);
 		_dbCommand->FetchByte(i++, pData->m_bSlot);
 		_dbCommand->FetchByte(i++, pData->m_bRace);
@@ -71,6 +74,9 @@ public:
 		_dbCommand->FetchInt16(i++, pData->m_bMagicR);
 		_dbCommand->FetchInt16(i++, pData->m_bPoisonR);
 		_dbCommand->FetchInt16(i++, pData->m_bCurseR);
+	    _dbCommand->FetchByte(i++,  pData->m_bItemClass);
+		_dbCommand->FetchByte(i++,  pData->m_bItemSetID);
+		_dbCommand->FetchByte(i++,  pData->m_bGiveItem);
 
 		if (!m_pMap->PutData(pData->m_iNum, pData))
 			delete pData;
