@@ -124,12 +124,8 @@ enum InOutType
 // Zone IDs
 #define ZONE_KARUS				1
 #define ZONE_ELMORAD			2
-#define ZONE_WARKARUS			3
-#define ZONE_WARELMORAD			4
 #define ZONE_KARUS_ESLANT		11
 #define ZONE_ELMORAD_ESLANT		12
-#define ZONE_OLDKARUS			18
-#define ZONE_OLDELMORAD			28
 #define ZONE_MORADON			21
 #define ZONE_DELOS				30
 #define ZONE_BIFROST			31
