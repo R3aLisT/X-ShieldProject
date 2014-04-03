@@ -291,7 +291,10 @@ enum SellType
 struct _ITEM_TABLE
 {
 	uint32	m_iNum;
+	uint8	m_bExt;
 	std::string	m_sName;
+	std::string m_sDesc;
+	uint8   m_bIconID;
 	uint8	m_bKind;
 	uint8	m_bSlot;
 	uint8	m_bRace;
@@ -347,7 +350,10 @@ struct _ITEM_TABLE
 	int16	m_bMagicR;
 	int16	m_bPoisonR;
 	int16	m_bCurseR;
-
+	uint8	m_bItemClass;
+	uint8	m_bItemSetID;
+	uint8	m_bGiveItem;
+	
 	INLINE bool isStackable() { return m_bCountable != 0; }
 
 	INLINE uint8 GetKind() { return m_bKind; }
