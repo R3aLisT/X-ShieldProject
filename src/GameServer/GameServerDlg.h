@@ -1,7 +1,3 @@
-#pragma once
-
-#ifdef GAMESERVER
-
 #include "resource.h"
 #include "LuaEngine.h"
 
@@ -369,19 +365,19 @@ public:
 	NationMonumentInformationArray	m_NationMonumentInformationArray;
 
 	Atomic<uint16>				m_sPartyIndex;
-	short	m_sZoneCount;							// AI Server ÀçÁ¢¼Ó½Ã »ç¿ë
+	short	m_sZoneCount;							// AI Server ï¿½ï¿½ï¿½ï¿½ï¿½Ó½ï¿½ ï¿½ï¿½ï¿½
 
-	bool	m_bFirstServerFlag;		// ¼­¹ö°¡ Ã³À½½ÃÀÛÇÑ ÈÄ °ÔÀÓ¼­¹ö°¡ ºÙÀº °æ¿ì¿¡´Â 1, ºÙÁö ¾ÊÀº °æ¿ì 0
+	bool	m_bFirstServerFlag;		// ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ Ã³ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ ï¿½ï¿½ï¿½Ó¼ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ì¿¡ï¿½ï¿½ 1, ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ 0
 	bool	m_bServerCheckFlag;
-	bool	m_bPointCheckFlag;		// AI¼­¹ö¿Í ÀçÁ¢Àü¿¡ NPCÆ÷ÀÎÅÍ ÂüÁ¶¸·±â (true:Æ÷ÀÎÅÍ ÂüÁ¶, false:Æ÷ÀÎÅÍ ÂüÁ¶ ¸øÇÔ)
-	short   m_sErrorSocketCount;  // ÀÌ»ó¼ÒÄÏ °¨½Ã¿ë
+	bool	m_bPointCheckFlag;		// AIï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ NPCï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ (true:ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½, false:ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½)
+	short   m_sErrorSocketCount;  // ï¿½Ì»ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½Ã¿ï¿½
 
 	uint16 m_sYear, m_sMonth, m_sDate, m_sHour, m_sMin;
 	uint8 m_byWeather;
 	uint16 m_sWeatherAmount;
 	int m_nCastleCapture;
 
-	uint8   m_byBattleOpen, m_byOldBattleOpen;					// 0:ÀüÀïÁßÀÌ ¾Æ´Ô, 1:ÀüÀïÁß(±¹°¡°£ÀüÀï), 2:´«½Î¿òÀüÀï
+	uint8   m_byBattleOpen, m_byOldBattleOpen;					// 0:ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½Æ´ï¿½, 1:ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½(ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½), 2:ï¿½ï¿½ï¿½Î¿ï¿½ï¿½ï¿½ï¿½ï¿½
 	uint8	m_byBattleZone,m_byBattleZoneType,m_bVictory, m_byOldVictory, m_bKarusFlag, m_bElmoradFlag, m_bMiddleStatueNation;
 	int32	m_byBattleOpenedTime;
 	int32	m_byBattleTime;
@@ -391,7 +387,7 @@ public:
 	uint8	m_sKarusMonuments, m_sElmoMonuments;
 	uint16	m_sKarusMonumentPoint, m_sElmoMonumentPoint;
 	bool    m_byKarusOpenFlag, m_byElmoradOpenFlag, m_byBanishFlag, m_byBattleSave;
-	short   m_sDiscount;	// ´É·ÂÄ¡¿Í Æ÷ÀÎÆ® ÃÊ±âÈ­ ÇÒÀÎ (0:ÇÒÀÎ¾øÀ½, 1:ÇÒÀÎ(50%) )
+	short   m_sDiscount;	// ï¿½É·ï¿½Ä¡ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½Æ® ï¿½Ê±ï¿½È­ ï¿½ï¿½ï¿½ï¿½ (0:ï¿½ï¿½ï¿½Î¾ï¿½ï¿½ï¿½, 1:ï¿½ï¿½ï¿½ï¿½(50%) )
 	short	m_sKarusDead, m_sElmoradDead, m_sBanishDelay, m_sKarusCount, m_sElmoradCount;
 	std::string m_nBattleZoneOpenDays;
 	uint8	m_nBattleZoneOpenHourStart[WAR_TIME_COUNT], m_nBattlezoneOpenWarZone[WAR_ZONE_COUNT];
@@ -437,7 +433,7 @@ public:
 
 	// zone server info
 	int					m_nServerNo, m_nServerGroupNo;
-	int					m_nServerGroup;	// serverÀÇ ¹øÈ£(0:¼­¹ö±ºÀÌ ¾ø´Ù, 1:¼­¹ö1±º, 2:¼­¹ö2±º)
+	int					m_nServerGroup;	// serverï¿½ï¿½ ï¿½ï¿½È£(0:ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½, 1:ï¿½ï¿½ï¿½ï¿½1ï¿½ï¿½, 2:ï¿½ï¿½ï¿½ï¿½2ï¿½ï¿½)
 	ServerArray			m_ServerArray;
 	ServerArray			m_ServerGroupArray;
 
@@ -515,7 +511,3 @@ public:
 	COMMAND_HANDLER(HandlePermitConnectCommand);
 	COMMAND_HANDLER(HandleWarResultCommand);
 };
-
-extern CGameServerDlg * g_pMain;
-
-#endif
