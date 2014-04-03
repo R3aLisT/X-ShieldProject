@@ -1112,6 +1112,7 @@ void KOMap::SetZoneAttributes(int zoneNumber)
 	case ZONE_ISILOON_ARENA:
 		m_zoneType = ZoneAbilityPVPNeutralNPCs;
 		m_zoneFlags = ZF_TALK_OTHER_NATION | ZF_ATTACK_OTHER_NATION | ZF_FRIENDLY_NPCS;
+		break;
 	case ZONE_FELANKOR_ARENA:
 		m_zoneType = ZoneAbilityPVPNeutralNPCs;
 		m_zoneFlags = ZF_TALK_OTHER_NATION | ZF_ATTACK_OTHER_NATION | ZF_FRIENDLY_NPCS;
