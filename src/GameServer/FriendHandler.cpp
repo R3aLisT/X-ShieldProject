@@ -27,8 +27,16 @@ void CUser::FriendRequest()
 	Packet result(WIZ_FRIEND_PROCESS, uint8(FRIEND_REQUEST));
 	g_pMain->AddDatabaseRequest(result, this);
 	
-	else if (pTUser->GetNation() != pUser->GetNation())
+		CUser *pTUser = g_pMain->GetUserPtr(pkt.read<uint16>());
+		if (pTUser == nullptr)
+			bResult = 2;
+		else if (pTUser->isDead())
+			bResult = 3;
+		else if (pTUser->GetNation() != pUser->GetNation())
 			bResult = 4;
+
+		if (bResult != 0)
+			break;
 			
 }
 
