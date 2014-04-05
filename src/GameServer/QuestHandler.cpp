@@ -197,10 +197,9 @@ void CUser::QuestV2MonsterCountAdd(uint16 sNpcID)
 
 			m_bKillCounts[group]++;
 			SaveEvent(QUEST_KILL_GROUP1 + group, m_bKillCounts[group]);
-			Packet result(WIZ_QUEST, uint8(9));
-			result << uint8(2) << uint8(group + 1) << m_bKillCounts[group];
-			Send(&result);
-			return;
+                        Packet result(WIZ_QUEST, uint8(9));
+                        result << uint8(2) << uint16(m_sEventDataIndex) << uint8(group+1) << uint32(m_bKillCounts[group]);
+                        Send(&result);
 		}
 	}
 }
