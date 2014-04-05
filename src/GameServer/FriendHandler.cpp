@@ -27,22 +27,13 @@ void CUser::FriendRequest()
 	Packet result(WIZ_FRIEND_PROCESS, uint8(FRIEND_REQUEST));
 	g_pMain->AddDatabaseRequest(result, this);
 	
-		CUser *pTUser = g_pMain->GetUserPtr(pkt.read<uint16>());
-		if (pTUser == nullptr)
-			bResult = 2;
-		else if (pTUser->isDead())
-			bResult = 3;
-		else if (pTUser->GetNation() != pUser->GetNation())
-			bResult = 4;
 
-		if (bResult != 0)
-			break;
-			
 }
 
 // Add or remove a friend from your list.
 void CUser::FriendModify(Packet & pkt, uint8 opcode)
 {
+
 	std::string strUserID;
 	CUser *pUser;
 	pkt >> strUserID;
@@ -54,6 +45,9 @@ void CUser::FriendModify(Packet & pkt, uint8 opcode)
 	Packet result(WIZ_FRIEND_PROCESS, opcode);
 	if (opcode == FRIEND_ADD)
 		result << pUser->GetSocketID();
+
+	if (pUser->GetNation())
+	if (pUser->isDead())
 
 	result.SByte();
 	result << strUserID;
