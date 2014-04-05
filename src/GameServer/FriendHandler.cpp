@@ -26,6 +26,10 @@ void CUser::FriendRequest()
 {
 	Packet result(WIZ_FRIEND_PROCESS, uint8(FRIEND_REQUEST));
 	g_pMain->AddDatabaseRequest(result, this);
+	
+	else if (pTUser->GetNation() != pUser->GetNation())
+			bResult = 4;
+			
 }
 
 // Add or remove a friend from your list.
