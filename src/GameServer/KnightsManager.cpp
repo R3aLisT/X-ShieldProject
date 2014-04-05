@@ -1022,7 +1022,7 @@ void CKnightsManager::KnightsAllianceCreate(CUser* pUser, Packet & pkt)
 void CKnightsManager::KnightsAllianceRequest(CUser* pUser, Packet & pkt)
 {
 	Packet result(WIZ_KNIGHTS_PROCESS, uint8(KNIGHTS_ALLY_REQ));
-	g_pMain->AddDatabaseRequest(result, this);
+	g_pMain->AddDatabaseRequest(result, pUser);
 }
 
 /**
