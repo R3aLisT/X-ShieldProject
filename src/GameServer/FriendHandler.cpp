@@ -39,15 +39,12 @@ void CUser::FriendModify(Packet & pkt, uint8 opcode)
 	pkt >> strUserID;
 
 	if (strUserID.empty() || strUserID.size() > MAX_ID_SIZE
-		|| (opcode == FRIEND_ADD && (pUser = g_pMain->GetUserPtr(strUserID, TYPE_CHARACTER)) == nullptr) && pUser->GetNation() != GetNation()) 
+		|| (opcode == FRIEND_ADD && (pUser = g_pMain->GetUserPtr(strUserID, TYPE_CHARACTER)) == nullptr) && pUser->GetNation() != GetNation() && pUser->isDead()) 
 		return;
 
 	Packet result(WIZ_FRIEND_PROCESS, opcode);
 	if (opcode == FRIEND_ADD)
 		result << pUser->GetSocketID();
-
-	if (pUser->GetNation())
-	if (pUser->isDead())
 
 	result.SByte();
 	result << strUserID;
