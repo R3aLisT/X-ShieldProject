@@ -595,7 +595,7 @@ void CUser::SendLoyaltyChange(int32 nChangeAmount /*= 0*/, bool bIsKillReward /*
 	{
 		// If you're using an NP modifying buff then add the bonus
 		nChangeAmount = m_bNPGainAmount * nChangeAmount / 100;
-		nChangeAmount = nChangeAmount * (100 + g_pMain->m_byNpEventAmount) / 100;
+		
 		// We should only apply NP bonuses when NP was gained as a reward for killing a player.
 		if (bIsKillReward)
 		{
@@ -606,7 +606,8 @@ void CUser::SendLoyaltyChange(int32 nChangeAmount /*= 0*/, bool bIsKillReward /*
 			if (isInPKZone() && g_pMain->m_nPVPMonumentNation[GetZoneID()] == GetNation())
 				nChangeAmount += PVP_MONUMENT_NP_BONUS;
 		}
-
+		if (g_pMain->m_byNpEventAmount > 0)
+			nChangeAmount = (100 + g_pMain->m_byNpEventAmount) / 100;
 		if (m_iLoyalty + nChangeAmount > LOYALTY_MAX)
 			m_iLoyalty = LOYALTY_MAX;
 		else
