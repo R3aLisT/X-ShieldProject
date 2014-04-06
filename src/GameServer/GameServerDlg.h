@@ -456,7 +456,7 @@ public:
 	uint8 m_byKingWeatherEvent_Minute;
 
 	// XP/coin events
-	uint8 m_byExpEventAmount, m_byCoinEventAmount;
+	uint8 m_byExpEventAmount, m_byCoinEventAmount, m_byNpEventAmount;
 
 	INLINE CLuaEngine * GetLuaEngine() { return &m_luaEngine; }
 

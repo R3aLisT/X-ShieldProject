@@ -74,6 +74,7 @@ void CUser::InitChatCommands()
 		{ "exp_change",			&CUser::HandleExpChangeCommand,					"Change a player an exp" },
 		{ "gold_change",		&CUser::HandleGoldChangeCommand,				"Change a player an gold" },
 		{ "exp_add",			&CUser::HandleExpAddCommand,					"Sets the server-wide XP event. If bonusPercent is set to 0, the event is ended. Arguments: bonusPercent" },
+		{ "np_add",				&CUser::HandleNpAddCommand,						"Sets the server-wide Np event. If bonusPercent is set to 0, the event is ended. Arguments: bonusPercent" },
 		{ "money_add",			&CUser::HandleMoneyAddCommand,					"Sets the server-wide coin event. If bonusPercent is set to 0, the event is ended. Arguments: bonusPercent" },
 		{ "permitconnect",		&CUser::HandlePermitConnectCommand,				"Player unban" },
 		{ "tp_all",				&CUser::HandleTeleportAllCommand,				"Players send to home zone." },
@@ -744,6 +745,29 @@ COMMAND_HANDLER(CUser::HandleExpAddCommand)
 	return true;
 }
 
+// Starts/stops the server NP event & sets its server-wide bonus.
+COMMAND_HANDLER(CUser::HandleNpAddCommand)
+{
+	if (!isGM())
+		return false;
+
+	// Expects the bonus XP percent, e.g. '+np_add' for a +15 Np boost.
+	if (vargs.empty())
+	{
+		// send description
+		g_pMain->SendHelpDescription(this, "Example : +np_add Percent");
+		return true;
+	}
+
+	g_pMain->m_byNpEventAmount = (uint8) atoi(vargs.front().c_str());
+
+	// Don't send the announcement if we're turning the event off.
+	if (g_pMain->m_byNpEventAmount == 0)
+		return true;
+
+	g_pMain->SendFormattedResource(IDS_NP_REPAY_EVENT, Nation::ALL, false, g_pMain->m_byNpEventAmount);
+	return true;
+}
 // Starts/stops the server coin event & sets its server-wide bonus.
 COMMAND_HANDLER(CUser::HandleMoneyAddCommand)
 {

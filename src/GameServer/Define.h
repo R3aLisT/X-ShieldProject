@@ -44,6 +44,8 @@
 #define KARUS_ARRAY (KARUS - 1)
 #define ELMORAD_ARRAY (ELMORAD - 1)
 
+#define IDS_NP_REPAY_EVENT		246
+
 enum PVPKillLoyalty
 {
 	ARDREAM_KILL_LOYALTY_SOURCE				= 25,

@@ -595,7 +595,7 @@ void CUser::SendLoyaltyChange(int32 nChangeAmount /*= 0*/, bool bIsKillReward /*
 	{
 		// If you're using an NP modifying buff then add the bonus
 		nChangeAmount = m_bNPGainAmount * nChangeAmount / 100;
-
+		nChangeAmount = nChangeAmount * (100 + g_pMain->m_byNpEventAmount) / 100;
 		// We should only apply NP bonuses when NP was gained as a reward for killing a player.
 		if (bIsKillReward)
 		{
@@ -2782,6 +2782,11 @@ void CUser::AppendExtraNoticeData(Packet & pkt, uint8 & elementCount)
 	if (g_pMain->m_byCoinEventAmount > 0)
 	{
 		g_pMain->GetServerResource(IDS_MONEY_REPAY_EVENT, &message, g_pMain->m_byCoinEventAmount);
+		AppendNoticeEntry(pkt, elementCount, message.c_str(), "Noah event"); 
+	}
+	if (g_pMain->m_byNpEventAmount > 0)
+	{
+		g_pMain->GetServerResource(IDS_NP_REPAY_EVENT, &message, g_pMain->m_byNpEventAmount);
 		AppendNoticeEntry(pkt, elementCount, message.c_str(), "Noah event"); 
 	}
 }

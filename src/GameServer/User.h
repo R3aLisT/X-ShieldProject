@@ -689,6 +689,7 @@ public:
 	COMMAND_HANDLER(HandleExpChangeCommand);
 	COMMAND_HANDLER(HandleGoldChangeCommand);
 	COMMAND_HANDLER(HandleExpAddCommand); /* for the server XP event */
+	COMMAND_HANDLER(HandleNpAddCommand); /* for the server Np event */
 	COMMAND_HANDLER(HandleMoneyAddCommand); /* for the server coin event */
 	COMMAND_HANDLER(HandlePermitConnectCommand);
 	COMMAND_HANDLER(HandleTeleportAllCommand);

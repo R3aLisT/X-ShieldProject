@@ -43,6 +43,7 @@ CGameServerDlg::CGameServerDlg()
 
 	m_byExpEventAmount = 0;
 	m_byCoinEventAmount = 0;
+	m_byNpEventAmount = 0;
 
 	m_sPartyIndex = 0;
 
