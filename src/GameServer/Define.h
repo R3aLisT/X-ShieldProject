@@ -149,6 +149,7 @@ enum InOutType
 #define ZONE_BATTLE4			ZONE_BATTLE_BASE + 4 // Nereid's Island
 #define ZONE_BATTLE5			ZONE_BATTLE_BASE + 5 // Zipang
 #define ZONE_BATTLE6			ZONE_BATTLE_BASE + 6 // Oreads
+#define ZONE_BATTLE7			ZONE_BATTLE_BASE + 7 // New wars
 
 #define ZONE_SNOW_BATTLE		69
 #define ZONE_RONARK_LAND		71

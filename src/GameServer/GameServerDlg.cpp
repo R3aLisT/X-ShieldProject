@@ -1710,7 +1710,7 @@ void CGameServerDlg::BattleZoneOpenTimer()
 					BattleWinnerResult(BATTLE_WINNER_NPC);
 				else if (nBattleZone == ZONE_BATTLE4) // Nereid's Island
 					BattleWinnerResult(BATTLE_WINNER_MONUMENT);
-				else if (nBattleZone == ZONE_BATTLE6) // Oreads
+				else if (nBattleZone == ZONE_BATTLE6 || nBattleZone == ZONE_BATTLE7) // Oreads & New War
 					BattleWinnerResult(BATTLE_WINNER_KILL);
 			}
 
@@ -1817,7 +1817,8 @@ void CGameServerDlg::BattleWinnerResult(BattleWinnerTypes winnertype)
 
 		if (winner_nation == 0
 			&& (nBattleZone == ZONE_BATTLE4 
-			|| nBattleZone == ZONE_BATTLE6))
+			|| nBattleZone == ZONE_BATTLE6 
+			|| nBattleZone == ZONE_BATTLE7))
 		{
 			BattleWinnerResult(BATTLE_WINNER_NPC);
 			return;
