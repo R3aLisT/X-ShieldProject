@@ -71,6 +71,7 @@ void LoginSession::HandleLogin(Packet & pkt)
 		AUTH_BANNED		= 0x04,
 		AUTH_IN_GAME	= 0x05,
 		AUTH_ERROR		= 0x06,
+		AUTH_AGREEMENT	= 0xF,
 		AUTH_FAILED		= 0xFF
 	};
 
@@ -108,6 +109,9 @@ void LoginSession::HandleLogin(Packet & pkt)
 	case AUTH_ERROR:
 		sAuthMessage = "ERROR";
 		break;
+	case AUTH_AGREEMENT:
+		sAuthMessage = "USER AGREEMENT";
+		break;
 	case AUTH_FAILED:
 		sAuthMessage = "FAILED";
 		break;
@@ -124,7 +128,7 @@ void LoginSession::HandleLogin(Packet & pkt)
 		result << g_pMain->m_DBProcess.AccountPremium(account);
 		result << account;
 	}
-	else if (resultCode == AUTH_IN_GAME)
+	else if (resultCode == AUTH_IN_GAME || resultCode == AUTH_AGREEMENT)
 	{
 
 	}
