@@ -16,8 +16,8 @@ typedef	std::map<uint32, time_t>			SkillCooldownList;
 typedef	std::map<uint16, time_t>			RHitRepeatList; 
 typedef	std::map<uint32, time_t>			UserSavedMagicMap;
 
-// Time (in seconds) between each save request (1 min).
-#define PLAYER_SAVE_INTERVAL			(1 * 60)
+// Time (in seconds) between each save request (3 min).
+#define PLAYER_SAVE_INTERVAL			(3 * 60)
 // Time (in seconds) between each skill request (-1 sec).
 #define PLAYER_SKILL_REQUEST_INTERVAL	0.7f
 // Time (in seconds) between each r hit request (-1 sec).
