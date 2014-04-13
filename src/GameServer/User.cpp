@@ -2977,7 +2977,9 @@ int16 CUser::GetLoyaltyDivideSource(uint8 totalmember)
 		nBaseLoyalty = RONARK_LAND_BASE_KILL_LOYALTY_SOURCE;
 	else if (GetZoneID() == ZONE_RONARK_LAND)
 		nBaseLoyalty = RONARK_LAND_KILL_LOYALTY_SOURCE;
-	else
+	else if (GetZoneID() == ZONE_KROWAZ_DOMINION)
+	        nBaseLoyalty = (g_pMain->m_Loyalty_Other_Zone_Source / 100) * 20;
+        else
 		nBaseLoyalty = OTHER_ZONE_KILL_LOYALTY_SOURCE;
 
 	int16 nMaxLoyalty = (nBaseLoyalty * 3) - 2;
@@ -3001,6 +3003,8 @@ int16 CUser::GetLoyaltyDivideTarget()
 		return RONARK_LAND_BASE_KILL_LOYALTY_TARGET;
 	else if (GetZoneID() == ZONE_RONARK_LAND)
 		return RONARK_LAND_KILL_LOYALTY_TARGET;
+	else if (GetZoneID() == ZONE_KROWAZ_DOMINION)
+	        return (g_pMain->m_Loyalty_Other_Zone_Target / 100) * 20;
 	else
 		return OTHER_ZONE_KILL_LOYALTY_TARGET;
 
