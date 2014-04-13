@@ -136,6 +136,26 @@ bool CMagicProcess::UserRegionCheck(Unit * pSkillCaster, Unit * pSkillTarget, _M
 		if (pSkillCaster->isHostileTo(pSkillTarget))
 			goto final_test;
 		break;
+		
+	case MORAL_AREA_ALL:
+		if (pSkillCaster->isNPC()
+			|| pSkillTarget->isNPC())
+			return false;
+
+		if ((TO_USER(pSkillCaster)->isInArena() 
+			&& TO_USER(pSkillTarget)->isInArena())
+			|| (TO_USER(pSkillCaster)->isInPVPZone() 
+			&& TO_USER(pSkillTarget)->isInPVPZone())
+			|| (TO_USER(pSkillCaster)->isInTempleEventZone()
+			&& TO_USER(pSkillTarget)->isInTempleEventZone()))
+		goto final_test;
+		
+		// Players cant attack other players in the safety area.
+		if (TO_USER(pSkillCaster)->isInSafetyArea() 
+			&& TO_USER(pSkillTarget)->isInSafetyArea())
+			return false;
+		break;
+ 
 
 	case MORAL_AREA_FRIEND:
 		if (!pSkillCaster->isHostileTo(pSkillTarget))
