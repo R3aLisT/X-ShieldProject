@@ -249,7 +249,7 @@ bool CUser::CanChangeZone(C3DMap * pTargetMap, WarpListResponse & errorReason)
 		return true;
 
 	case ZONE_ARDREAM:
-		if (g_pMain->m_byBattleOpen != NO_BATTLE)
+		if (g_pMain->isWarOpen())
 		{
 			errorReason = WarpListNotDuringWar;
 			return false;
@@ -277,7 +277,7 @@ bool CUser::CanChangeZone(C3DMap * pTargetMap, WarpListResponse & errorReason)
 		return true;
 
 	case ZONE_RONARK_LAND_BASE:
-		if (g_pMain->m_byBattleOpen != NO_BATTLE)
+		if (g_pMain->isWarOpen())
 		{
 			errorReason = WarpListNotDuringWar;
 			return false;
@@ -302,7 +302,7 @@ bool CUser::CanChangeZone(C3DMap * pTargetMap, WarpListResponse & errorReason)
 			return false;
 		}
 		case ZONE_KROWAZ_DOMINION:
-		if (g_pMain->m_byBattleOpen != NO_BATTLE)
+		if (g_pMain->isWarOpen())
 		{
 			errorReason = WarpListNotDuringWar;
 			return false;
@@ -319,10 +319,10 @@ bool CUser::CanChangeZone(C3DMap * pTargetMap, WarpListResponse & errorReason)
 			errorReason = WarpListNeedNP;
 			return false;
 		}
-		return true;
+		return false;
 
 	case ZONE_RONARK_LAND:
-		if (g_pMain->m_byBattleOpen != NO_BATTLE)
+		if (g_pMain->isWarOpen())
 		{
 			errorReason = WarpListNotDuringWar;
 			return false;
