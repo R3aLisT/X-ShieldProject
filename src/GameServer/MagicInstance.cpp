@@ -1877,10 +1877,15 @@ bool MagicInstance::ExecuteType5()
 				continue;
 
 		case RESURRECTION:
-			pTUser->Regene(1, nSkillID);
-			pTUser->RobItem(pSkill->iUseItem, pType->sNeedStone);
-			TO_USER(pSkillCaster)->GiveItem(pSkill->iUseItem, pType->sNeedStone / 2);
-			break;
+ 			if (pTUser->CheckExistItem(pSkill->iUseItem, pType->sNeedStone))
+ 			{
+ 				if (pTUser->RobItem(pSkill->iUseItem, pType->sNeedStone))
+ 				{
+ 					TO_USER(pSkillCaster)->GiveItem(pSkill->iUseItem, (pType->sNeedStone / 2) + 1);
+					pTUser->Regene(1,nSkillID);
+ 				}
+ 			}
+ 			break;
 
 		case REMOVE_BLESS:
 			{
