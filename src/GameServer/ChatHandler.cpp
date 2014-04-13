@@ -991,7 +991,7 @@ COMMAND_HANDLER(CGameServerDlg::HandleWarResultCommand)
 		return true;
 	}
 
-	if (m_byBattleOpen == NO_BATTLE)
+	if (!isWarOpen())
 	{
 		// send description
 		printf("Warning : Battle is not open.\n");
