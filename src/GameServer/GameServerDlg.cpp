@@ -1658,7 +1658,7 @@ void CGameServerDlg::BattleZoneOpenTimer()
 	int nWeekDay = g_localTime.tm_wday;
 	int nHour = g_localTime.tm_hour;
 
-	if (m_byBattleOpen == NO_BATTLE)
+	if (!isWarOpen())
 	{
 		std::list<std::string> vargs = StrSplit(m_nBattleZoneOpenDays, ",");
 		uint8 nDaySize = vargs.size();
@@ -1669,10 +1669,14 @@ void CGameServerDlg::BattleZoneOpenTimer()
 			{
 				nDay = atoi(vargs.front().c_str());
 				if (nDay == nWeekDay)
+				{
 					for (int x = 0; x < WAR_TIME_COUNT; x++)
+					{
 						if (m_nBattleZoneOpenHourStart[x] == nHour)
 							BattleZoneOpen(BATTLEZONE_OPEN, m_nBattlezoneOpenWarZone[x]);
-				vargs.pop_front();
+					}
+					vargs.pop_front();
+				}
 			}
 		}
 	}
@@ -1710,7 +1714,7 @@ void CGameServerDlg::BattleZoneOpenTimer()
 					BattleWinnerResult(BATTLE_WINNER_NPC);
 				else if (nBattleZone == ZONE_BATTLE4) // Nereid's Island
 					BattleWinnerResult(BATTLE_WINNER_MONUMENT);
-				else if (nBattleZone == ZONE_BATTLE6 || nBattleZone == ZONE_BATTLE7) // Oreads & New War
+				else if (nBattleZone == ZONE_BATTLE6) // Oreads
 					BattleWinnerResult(BATTLE_WINNER_KILL);
 			}
 
