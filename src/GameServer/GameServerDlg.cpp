@@ -81,7 +81,7 @@ bool CGameServerDlg::Startup()
 
 	if (!g_pMain->m_socketMgr.Listen(g_pMain->m_nGamePort, MAX_USER))
 	{
-		printf(_T("ERROR: Failed to listen on server port (%d)."), g_pMain->m_nGamePort);
+		printf(_T("ERROR: Failed to listen on server port (%d).\n"), g_pMain->m_nGamePort);
 		return false;
 	}
 
