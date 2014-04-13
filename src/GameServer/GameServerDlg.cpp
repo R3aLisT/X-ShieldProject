@@ -2498,10 +2498,11 @@ int CGameServerDlg::KickOutAllUsers()
 		CUser *pUser = TO_USER(itr->second);
 		if (pUser->isInGame())
 			count++;
-
+			g_DBAgent.UpdateUser(pUser->GetName(), UPDATE_LOGOUT, pUser);
+			g_DBAgent.UpdateWarehouseData(pUser->GetAccountName(), UPDATE_LOGOUT, pUser);
+			g_DBAgent.UpdateSavedMagic(pUser);
 		pUser->Disconnect();
 	}
-	g_pMain->m_socketMgr.ReleaseLock();
 	return count;
 }
 
