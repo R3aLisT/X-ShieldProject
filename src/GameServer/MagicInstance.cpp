@@ -2145,7 +2145,7 @@ bool MagicInstance::ExecuteType8()
 
 			if (pEvent)
 				pTUser->Warp(uint16(pEvent->fPosX * 10), uint16(pEvent->fPosZ * 10));	
-			else if (pTUser->GetZoneID() <= ELMORAD || pTUser->GetMap()->isWarZone() || pTUser->GetMap()->canAttackOtherNation())
+			else if (pTUser->GetZoneID() <= ELMORAD || pTUser->GetMap()->isWarZone() || pTUser->GetMap()->canAttackOtherNation() || pTUser->GetMap()->canTalkToOtherNation())
 			{
 				_START_POSITION * pStartPosition = g_pMain->m_StartPositionArray.GetData(pTUser->GetZoneID());
 				if (pStartPosition)
