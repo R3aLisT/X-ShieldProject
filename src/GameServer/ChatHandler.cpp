@@ -341,7 +341,7 @@ void CUser::SendDeathNotice(Unit * pKiller, DeathNoticeType noticeType)
 		<< GetName()
 		<< uint16(GetX()) << uint16(GetZ());
 
-	SendToZone(&result);
+	SendToZone(&result,this,pKiller->GetEventRoom(),(isInArena() ? RANGE_20M : 0.0f));
 }
 
 bool CUser::ProcessChatCommand(std::string & message)
