@@ -128,11 +128,14 @@ void LoginSession::HandleLogin(Packet & pkt)
 		result << g_pMain->m_DBProcess.AccountPremium(account);
 		result << account;
 	}
-	else if (resultCode == AUTH_IN_GAME || resultCode == AUTH_AGREEMENT)
+	else if (resultCode == AUTH_IN_GAME)
 	{
 
 	}
-
+	else if (resultCode == AUTH_AGREEMENT)
+	{
+		result << uint8(0);
+	}
 	g_pMain->WriteUserLogFile(string_format("[ LOGIN - %d:%d:%d ] ID=%s, PW=%s, Authentication=%s\n",time.GetHour(),time.GetMinute(),time.GetSecond(),account.c_str(),password.c_str(),sAuthMessage.c_str()));
 
 	Send(&result);	
