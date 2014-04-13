@@ -162,7 +162,7 @@ void CUser::SelectCharacter(Packet & pkt)
 		return;
 	}
 
-	if (g_pMain->m_byBattleOpen == NO_BATTLE && GetFame() == COMMAND_CAPTAIN)
+	if (!g_pMain->isWarOpen() && GetFame() == COMMAND_CAPTAIN)
 		m_bFame = CHIEF;
 
 	// Disallow players from relogging in the opposite nation's home zone when an invasion's not running.
