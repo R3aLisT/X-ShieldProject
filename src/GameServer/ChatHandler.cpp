@@ -439,7 +439,15 @@ COMMAND_HANDLER(CUser::HandleZoneChangeCommand)
 
 	// Behave as in official (we'll fix this later)
 	int nZoneID = atoi(vargs.front().c_str());
-	ZoneChange(nZoneID, m_curx, m_curz);
+	
+	_START_POSITION * pStartPosition = g_pMain->GetStartPosition(nZoneID);
+	if (pStartPosition == nullptr) 
+		return false;
+
+	ZoneChange(nZoneID, 
+		(float)(GetNation() == KARUS ? pStartPosition->sKarusX : pStartPosition->sElmoradX + myrand(0, pStartPosition->bRangeX)), 
+		(float)(GetNation() == KARUS ? pStartPosition->sKarusZ : pStartPosition->sElmoradZ + myrand(0, pStartPosition->bRangeZ)));
+
 	return true;
 }
 
