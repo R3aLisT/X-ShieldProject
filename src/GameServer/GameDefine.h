@@ -357,7 +357,7 @@ struct _ITEM_TABLE
 	INLINE bool isStackable() { return m_bCountable != 0; }
 
 	INLINE uint8 GetKind() { return m_bKind; }
-	INLINE uint8 GetItemGroup() { return m_bKind / 10; }
+	INLINE uint8 GetItemGroup() { return uint8(m_bKind / 10); }
 
 	INLINE bool isDagger() { return GetItemGroup() == WEAPON_DAGGER; }
 	INLINE bool isSword() { return GetItemGroup() == WEAPON_SWORD; }
