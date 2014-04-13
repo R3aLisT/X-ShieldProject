@@ -1102,7 +1102,7 @@ void KOMap::SetZoneAttributes(int zoneNumber)
 		break;
 	case ZONE_BORDER_DEFENSE_WAR:
 		m_zoneType = ZoneAbilityPVP;
-		m_zoneFlags = ZF_ATTACK_OTHER_NATION;
+		m_zoneFlags = ZF_ATTACK_OTHER_NATION | ZF_TALK_OTHER_NATION;
 		break;
 	case ZONE_CHAOS_DUNGEON:
 		m_zoneType = ZoneAbilityPVP;
