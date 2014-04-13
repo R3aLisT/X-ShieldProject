@@ -2033,6 +2033,9 @@ void CUser::SetUserAbility(bool bSendPacket /*= true*/)
 		}
 	}
 
+	if (m_sACAmount < 0)
+		m_sACAmount = 0;
+
 	if (sItemDamage < 3)
 		sItemDamage = 3;
 
