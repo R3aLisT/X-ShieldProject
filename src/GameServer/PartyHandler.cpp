@@ -28,7 +28,7 @@ void CUser::PartyProcess(Packet & pkt)
 	case PARTY_PERMIT:
 		if (pkt.read<uint8>()) 
 			PartyInsert();
-		else							
+		else
 			PartyCancel();
 		break;
 
@@ -57,10 +57,6 @@ void CUser::PartyCancel()
 		return;
 
 	_PARTY_GROUP *pParty = g_pMain->GetPartyPtr(GetPartyID());
-
-	m_sPartyIndex = -1;
-	m_bInParty = false;
-
 	if (pParty == nullptr)
 		return;
 
@@ -69,6 +65,9 @@ void CUser::PartyCancel()
 	if (pUser == nullptr)
 		return;
 
+	m_bInParty = false;
+	m_sPartyIndex = -1;
+
 	for (int i = 0; i < MAX_PARTY_USERS; i++)
 	{		
 		if (pParty->uid[i] >= 0)
@@ -76,7 +75,7 @@ void CUser::PartyCancel()
 	}
 
 	if (count == 1)
-		pUser->PartyDelete();			
+		pUser->PartyDelete();
 
 	Packet result(WIZ_PARTY, uint8(PARTY_INSERT));
 	result << int16(-1);
@@ -112,8 +111,8 @@ void CUser::PartyRequest(int memberid, bool bCreate)
 		if (!isInClan() 
 			|| GetClanID() != pUser->GetClanID())
 		{
-			if ( !(   ( pUser->GetLevel() <= (int)(GetLevel() * 1.5) && pUser->GetLevel() >= (int)(GetLevel() * 1.5)) 
-				|| ( pUser->GetLevel() <= (GetLevel() + 8) && pUser->GetLevel() >= ((int)(GetLevel()) - 8))))
+			if (!((pUser->GetLevel() <= (int)(GetLevel() * 1.5) && pUser->GetLevel() >= (int)(GetLevel() * 2 / 3))
+				|| (pUser->GetLevel() <= (GetLevel() + 8) && pUser->GetLevel() >= ((int)(GetLevel()) - 8))))
 			{
 				errorCode = -2;
 				goto fail_return;
@@ -172,6 +171,7 @@ void CUser::PartyInsert()
 	CUser* pUser = nullptr;
 	_PARTY_GROUP* pParty = nullptr;
 	uint8 byIndex = 0xFF;
+	int leader_id = -1;
 
 	if (!isInParty())
 		return;
@@ -181,6 +181,18 @@ void CUser::PartyInsert()
 	{
 		m_bInParty = false;
 		m_sPartyIndex = -1;
+		return;
+	}
+
+	leader_id = pParty->uid[0];
+	pUser = g_pMain->GetUserPtr(leader_id);
+	if (pUser == nullptr)
+		return;
+
+	if (pUser->GetZoneID() != GetZoneID() 
+		|| GetPartyMemberAmount(pParty) == MAX_PARTY_USERS)
+	{
+		PartyCancel();
 		return;
 	}
 
@@ -380,7 +392,10 @@ void CUser::PartyRemove(int memberid)
 	g_pMain->Send_PartyMember(m_sPartyIndex, &result);
 
 	if (memberPos >= 0)
+	{
+		pUser->m_bInParty = false;
 		pUser->m_sPartyIndex = pParty->uid[memberPos] = -1;
+	}
 
 	// AI Server
 	result.Initialize(AG_USER_PARTY);
@@ -472,12 +487,12 @@ void CUser::PartyBBSRegister(Packet & pkt)
 			|| pUser->m_bNeedParty == 1) 
 			continue;
 
-		if( !(   ( pUser->GetLevel() <= (int)(GetLevel() * 1.5) && pUser->GetLevel() >= (int)(GetLevel() * 1.5)) 
-			|| ( pUser->GetLevel() <= (GetLevel() + 8) && pUser->GetLevel() >= ((int)(GetLevel()) - 8))))
+		if(!((pUser->GetLevel() <= (int)(GetLevel() * 1.5) && pUser->GetLevel() >= (int)(GetLevel() * 1.5)) 
+			|| (pUser->GetLevel() <= (GetLevel() + 8) && pUser->GetLevel() >= ((int)(GetLevel()) - 8))))
 			continue;
 
 		if (pUser->GetSocketID() == GetSocketID()) break;
-		counter++;		
+		counter++;
 	}
 	g_pMain->m_socketMgr.ReleaseLock();
 
@@ -540,8 +555,8 @@ void CUser::SendPartyBBSNeeded(uint16 page_index, uint8 bType)
 			&& GetZoneID() != ZONE_MORADON
 			&& GetZoneID() != ZONE_FORGOTTEN_TEMPLE)
 			|| (pUser->m_bNeedParty == 1 && !pUser->m_bPartyLeader)
-			|| !(  ( pUser->GetLevel() <= (int)(GetLevel() * 1.5) && pUser->GetLevel() >= (int)(GetLevel() * 2 / 3)) 
-			|| ( pUser->GetLevel() <= (GetLevel() + 8) && pUser->GetLevel() >= ((int)(GetLevel()) - 8))))
+			|| !((pUser->GetLevel() <= (int)(GetLevel() * 1.5) && pUser->GetLevel() >= (int)(GetLevel() * 2 / 3)) 
+			|| (pUser->GetLevel() <= (GetLevel() + 8) && pUser->GetLevel() >= ((int)(GetLevel()) - 8))))
 			continue;
 
 		BBS_Counter++;
@@ -612,7 +627,7 @@ uint8 CUser::GetPartyMemberAmount(_PARTY_GROUP *pParty)
 		return 0;
 
 	uint8 PartyMembers = 0;
-	for( int i = 0; i < MAX_PARTY_USERS; i++)
+	for (int i = 0; i < MAX_PARTY_USERS; i++)
 	{
 		if(pParty->uid[i] >= 0)
 			PartyMembers++;
