@@ -3873,6 +3873,8 @@ void CUser::SelectWarpList(Packet & pkt)
 	}
 
 	ZoneChange(pWarp->sZone, pWarp->fX + rx, pWarp->fZ + rz);
+	if (GetZoneID() == pWarp->sZone && pWarp->dwPay > 0 && GetCoins() >= pWarp->dwPay)
+		GoldLose(pWarp->dwPay);
 }
 
 void CUser::ServerChangeOk(Packet & pkt)
