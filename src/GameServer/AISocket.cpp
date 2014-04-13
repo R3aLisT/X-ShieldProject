@@ -531,7 +531,7 @@ void CAISocket::RecvBattleEvent(Packet & pkt)
 	}
 	else if (bType == BATTLE_MAP_EVENT_RESULT)
 	{
-		if (g_pMain->m_byBattleOpen == NO_BATTLE)
+		if (!g_pMain->isWarOpen())
 		{
 			TRACE("#### RecvBattleEvent Fail : battleopen = %d, type = %d\n", g_pMain->m_byBattleOpen, bType);
 			return;
@@ -544,7 +544,7 @@ void CAISocket::RecvBattleEvent(Packet & pkt)
 	}
 	else if (bType == BATTLE_EVENT_RESULT)
 	{
-		if (g_pMain->m_byBattleOpen == NO_BATTLE)
+		if (!g_pMain->isWarOpen())
 		{
 			TRACE("#### RecvBattleEvent Fail : battleopen = %d, type=%d\n", g_pMain->m_byBattleOpen, bType);
 			return;
