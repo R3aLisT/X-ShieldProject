@@ -1840,7 +1840,7 @@ void CGameServerDlg::BattleWinnerResult(BattleWinnerTypes winnertype)
 
 void CGameServerDlg::BattleZoneOpen(int nType, uint8 bZone /*= 0*/)
 {
-	if ((nType == BATTLEZONE_OPEN || nType == SNOW_BATTLEZONE_OPEN) && m_byBattleOpen == NO_BATTLE)
+	if ((nType == BATTLEZONE_OPEN || nType == SNOW_BATTLEZONE_OPEN) && !g_pMain->isWarOpen())
 	{
 		m_byBattleOpen = nType == BATTLEZONE_OPEN ? NATION_BATTLE : SNOW_BATTLE;	
 		m_byOldBattleOpen = nType == BATTLEZONE_OPEN ? NATION_BATTLE : SNOW_BATTLE;
@@ -1861,7 +1861,7 @@ void CGameServerDlg::BattleZoneOpen(int nType, uint8 bZone /*= 0*/)
 			KickOutZoneUsers(ZONE_KROWAZ_DOMINION);
 		}
 	}
-	else if (nType == BATTLEZONE_CLOSE && m_byBattleOpen != NO_BATTLE)
+	else if (nType == BATTLEZONE_CLOSE && isWarOpen())
 		Announcement(BATTLEZONE_CLOSE);
 	else
 		return;
@@ -1933,7 +1933,7 @@ void CGameServerDlg::BanishLosers()
 			continue;
 
 		// Reset captains
-		if (m_byBattleOpen == NO_BATTLE)
+		if (!isWarOpen())
 		{
 			if (pUser->GetFame() == COMMAND_CAPTAIN)
 				pUser->ChangeFame(CHIEF);
@@ -1945,7 +1945,7 @@ void CGameServerDlg::BanishLosers()
 			if (pUser->GetMap()->isWarZone() && m_bVictory != pUser->GetNation())
 				pUser->KickOutZoneUser(true);
 		}
-		else if (m_byBattleOpen == NO_BATTLE)
+		else if (!isWarOpen())
 		{
 			// Kick out invaders
 			if ((pUser->GetZoneID() <= ELMORAD && pUser->GetZoneID() != pUser->GetNation())
