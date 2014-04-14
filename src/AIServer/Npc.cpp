@@ -1577,7 +1577,7 @@ float CNpc::FindEnemyExpand(int nRX, int nRZ, float fCompDis, UnitType unitType)
 		CRegion *pRegion = &pMap->m_ppRegion[nRX][nRZ];
 
 		//TRACE("FindEnemyExpand type1,, region_x=%d, region_z=%d, user=%d, mon=%d\n", nRX, nRZ, nUser, nMonster);
-		if (pRegion->m_RegionUserArray.IsEmpty())
+		if (pRegion == nullptr || (pRegion && pRegion->m_RegionUserArray.IsEmpty()))
 			return 0.0f;
 
 		foreach_stlmap (itr, pRegion->m_RegionUserArray)
@@ -1617,7 +1617,7 @@ float CNpc::FindEnemyExpand(int nRX, int nRZ, float fCompDis, UnitType unitType)
 		FastGuard lock(pMap->m_lock);
 		CRegion *pRegion = &pMap->m_ppRegion[nRX][nRZ];
 
-		if (pRegion->m_RegionNpcArray.IsEmpty())
+		if (pRegion == nullptr || (pRegion && pRegion->m_RegionNpcArray.IsEmpty()))
 			return 0.0f;
 
 		foreach_stlmap (itr, pRegion->m_RegionNpcArray)
@@ -2914,6 +2914,10 @@ void CNpc::FindFriendRegion(int x, int z, MAP* pMap, _TargetHealer* pHealer, Mon
 
 	FastGuard lock(pMap->m_lock);
 	CRegion *pRegion = &pMap->m_ppRegion[x][z];
+
+	if (pRegion == nullptr)
+		return;
+
 	__Vector3 vStart, vEnd;
 	float fDis = 0.0f, 
 		fSearchRange = (type == MonSearchNeedsHealing ? (float)m_byAttackRange : (float)m_byTracingRange);
