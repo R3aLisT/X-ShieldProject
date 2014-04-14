@@ -64,7 +64,7 @@ void CUser::ItemUpgradeProcess(Packet & pkt)
 *
 * @param	pkt	The packet.
 */
-void CUser::ItemUpgrade(Packet & pkt, bool isRebirthUpgrade)
+void CUser::ItemUpgrade(Packet & pkt, uint8 nUpgradeType)
 {
 	enum UpgradeErrorCodes
 	{
@@ -78,7 +78,7 @@ void CUser::ItemUpgrade(Packet & pkt, bool isRebirthUpgrade)
 
 	enum UpgradeType { UpgradeTypeNormal = 1, UpgradeTypePreview = 2 };
 
-	Packet result(WIZ_ITEM_UPGRADE, uint8(isRebirthUpgrade ? ITEM_UPGRADE_REBIRTH : ITEM_UPGRADE));
+	Packet result(WIZ_ITEM_UPGRADE, nUpgradeType);
 	_ITEM_DATA  * pOriginItem;
 	_ITEM_TABLE * proto;
 	int32 nItemID[10]; int8 bPos[10];
@@ -231,8 +231,10 @@ void CUser::ItemUpgrade(Packet & pkt, bool isRebirthUpgrade)
 					continue;
 
 				_ITEM_DATA * pItem = GetItem(SLOT_MAX + bPos[x]);
-				if (nItemID[x] != pItem->nNum 
-					|| nItemID[x] != pUpgrade->nReqItem[x-1])
+				if (pItem == nullptr
+					|| nItemID[x] != pItem->nNum 
+					|| (nUpgradeType != ITEM_ACCESSORIES 
+					&& nItemID[x] != pUpgrade->nReqItem[x-1]))
 				{
 					isValidMatch = false;
 					break;
@@ -385,6 +387,7 @@ void CUser::ItemUpgradeNotice(_ITEM_TABLE * pItem, uint8 UpgradeResult)
 */
 void CUser::ItemUpgradeAccessories(Packet & pkt)
 {
+	ItemUpgrade(pkt, ITEM_ACCESSORIES);
 }
 
 /**
@@ -750,5 +753,5 @@ void CUser::SpecialItemExchange(Packet & pkt)
 */
 void CUser::ItemUpgradeRebirth(Packet & pkt)
 {
-	ItemUpgrade(pkt, true);
+	ItemUpgrade(pkt, ITEM_UPGRADE_REBIRTH);
 }

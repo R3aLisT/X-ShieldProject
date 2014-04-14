@@ -819,7 +819,7 @@ public:
 
 	// from the client
 	void ItemUpgradeProcess(Packet & pkt);
-	void ItemUpgrade(Packet & pkt, bool isRebirth = false);
+	void ItemUpgrade(Packet & pkt, uint8 nUpgradeType = ITEM_UPGRADE);
 	void ItemUpgradeNotice(_ITEM_TABLE * pItem, uint8 UpgradeResult);
 	void ItemUpgradeAccessories(Packet & pkt);
 	void BifrostPieceProcess(Packet & pkt); // originally named BeefRoastPieceProcess() -- that's not happening.
