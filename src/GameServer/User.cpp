@@ -2969,7 +2969,8 @@ void CUser::LoyaltyDivide(int16 tid, uint16 bonusNP /*= 0*/)
 		if (pUser == nullptr)
 			continue;
 
-		pUser->SendLoyaltyChange(loyalty_source, true, false, pTUser->GetMonthlyLoyalty() > 0 ? true : false);
+		if (pUser->isAlive())
+		    pUser->SendLoyaltyChange(loyalty_source, true, false, pTUser->GetMonthlyLoyalty() > 0 ? true : false); 
 	}
 
 	pTUser->SendLoyaltyChange(loyalty_target, true, false, pTUser->GetMonthlyLoyalty() > 0 ? true : false);
