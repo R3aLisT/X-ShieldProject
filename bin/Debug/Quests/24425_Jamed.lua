@@ -1,132 +1,119 @@
--- [수색대장]자메드
-
--- EVENT 는 100번 이상 부터 사용하라
-
--- UID : 서버에서 제공하는 유저번호
--- EVENT : 서버에서 제공하는 퀘스트 번호
--- STEP : 서버에서 제공하는 퀘스트 내부 단계
-
--- 위의 세가지 파라메타는 루아 실행시 항상 전역변수로 제공�
-
--- 지역변수 선언...
-local UserClass;
-local QuestNum;
 local Ret = 0;
 local NPC = 24425;
 
--- [수색대장]자메드 클릭시 퀘스트 체크  
-
-if EVENT == 190 then
+if (EVENT == 190) then
 	QuestNum = SearchQuest(UID, NPC);
-		if QuestNum == 0 then --해당 NPC에게 할수 있는 퀘스트가 0개 일때 
-			 SelectMsg(UID, 2, -1, 4578, NPC, 10, 193, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1);
-			 Ret = 1; 
-		elseif QuestNum > 1 and  QuestNum < 100 then--해당 NPC에게 할수 있는 퀘스트가 1개 이상 일때 
-          NpcMsg(UID, 4579, NPC)
-      else --해당 NPC에게 할수 있는 퀘스트가 1개 일때 
-          EVENT = QuestNum
-		end
+	if (QuestNum == 0) then
+		SelectMsg(UID, 2, -1, 4578, NPC, 10, 193);
+	elseif (QuestNum > 1 and  QuestNum < 100) then
+		NpcMsg(UID, 4579, NPC)
+	else
+		EVENT = QuestNum
+	end
 end
 
-if EVENT == 193 then
-    Ret = 1;
+if (EVENT == 193) then
+	Ret = 1;
 end
-
---******************************************************--
--- 아르드림의 평화 시작 
---******************************************************--
 
 local savenum = 438;
 
--- 시드미셀 등장
-
-if EVENT == 530 then
-    SaveEvent(UID, 4306);
-    SelectMsg(UID, 1, savenum, 4580, NPC, 4080, 193, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1);
+if (EVENT == 530) then -- 56 Level Ardream Kill 10
+	SaveEvent(UID, 4306);
+	SelectMsg(UID, 2, savenum, 4580, NPC, 4080, 193);
 end
 
--- 438 번의 속성 0번 4번일 경우
-
-local MonsterSub = 0;
-
-if EVENT == 532 then
-   MonsterSub = ExistMonsterQuestSub(UID);
-   if MonsterSub == 0 then -- 몬스터 서브 퀘스트가 없을때
-    SelectMsg(UID, 3, savenum, 4582, NPC, 4228, 535, 4157, 520, 4063, 193, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1);
-	else-- 몬스터 서브 퀘스트가 있을때
-    SelectMsg(UID, 2, savenum, 4583, NPC, 10, 193, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1);
-   end
+if (EVENT == 532) then
+	MonsterSub = ExistMonsterQuestSub(UID);
+	if (MonsterSub == 0) then
+		SelectMsg(UID, 2, savenum, 4582, NPC, 4228, 535, 4063, 193);
+	else
+		SelectMsg(UID, 2, savenum, 4583, NPC, 10, 193);
+	end
 end
 
-if EVENT == 535 then
-    SelectMsg(UID, 4, savenum, 4646, NPC, 22, 533, 23, 534, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1);
+if (EVENT == 535) then
+	SelectMsg(UID, 4, savenum, 4646, NPC, 22, 533, 23, 534);
 end
 
-
-if EVENT == 520 then
-    Status = CheckEventStatus(UID, 445)
-       if Status == 2 then
-       SelectMsg(UID, 2, savenum, 4643, NPC, 10, 193, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1);
-       else
-       SelectMsg(UID, 2, savenum, 4643, NPC, 10, 521, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1);
-   end
-
+if (EVENT == 533) then
+	SaveEvent(UID, 4307);
 end
 
-
-if EVENT == 521 then
-    RunExchange(UID, 505);
-    SaveEvent(UID, 4398); --200 획득 
+if (EVENT == 534) then
+	SaveEvent(UID, 4310);
 end
 
-
-if EVENT == 533 then
-   SaveEvent(UID, 4307); --수락시
+if (EVENT == 180) then
+	SaveEvent(UID, 4309);
+	SelectMsg(UID, 2, savenum, 4585, NPC, 14, 193);
 end
 
-
-if EVENT == 534 then
-   SaveEvent(UID, 4310); -- 거절시 
+if (EVENT == 536) then
+	MonsterCount = CountMonsterQuestSub(UID, 438, 1);
+	if (MonsterCount < 10) then
+		SelectMsg(UID, 2, savenum, 4587, NPC, 18, 538);
+	else
+		SelectMsg(UID, 4, savenum, 4588, NPC, 4172, 537, 4173, 193);
+	end
 end
 
-
--- 재료를 다 모았을때 시드 또 등장 
-
-if EVENT == 180 then
-    SaveEvent(UID, 4309);
-    SelectMsg(UID, 1, savenum, 4585, NPC, 14, 193, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1);
+if (EVENT == 538) then
+	ShowMap(UID, 489);
 end
 
--- 438의 1번 3번인 경우 
-
-local MonsterCount = 0;
-
-if EVENT == 536 then
-   MonsterCount  = CountMonsterQuestSub(UID, 1);
-   if  MonsterCount < 30 then -- 사냥이 남았을때
-      SelectMsg(UID, 2, savenum, 4587, NPC, 10, 193, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1);
-   else-- 사냥이 완료 되었을때 
-      SelectMsg(UID, 2, savenum, 4588, NPC, 4172, 537, 4173, 193, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1);
-   end
+if (EVENT == 537) then
+	ExpChange(UID, 14000000)
+	SaveEvent(UID, 4308);   
 end
 
+local savenum = 899;
 
-local Check;
-
-if EVENT == 537 then
-  Check = CheckExchange(UID, 489)
-   if  Check ==1 then
-   RunExchange(UID, 489);
-   SaveEvent(UID, 4308);
-   SaveEvent(UID, 4315);
-   else
-  Ret = 1;	
-  end	 
+if (EVENT == 9360) then -- 59 Level Ardream Kill 10
+	SaveEvent(UID, 9387);
+	SelectMsg(UID, 2, savenum, 4580, NPC, 4080, 193);
 end
 
+if (EVENT == 9362) then
+	MonsterSub = ExistMonsterQuestSub(UID);
+	if (MonsterSub == 0) then
+		SelectMsg(UID, 2, savenum, 8684, NPC, 4228, 9363, 4063, 193);
+	else
+		SelectMsg(UID, 2, savenum, 8684, NPC, 10, 193);
+	end
+end
 
---******************************************************--
--- 아르드림의 평화 끝 
---******************************************************--
+if (EVENT == 9363) then
+	SelectMsg(UID, 4, savenum, 8684, NPC, 22, 9364, 23, 9368);
+end
 
-return Ret;
+if (EVENT == 9364) then
+	SaveEvent(UID, 9388);
+end
+
+if (EVENT == 9368) then
+	SaveEvent(UID, 9391);
+end
+
+if (EVENT == 9365) then
+	SaveEvent(UID, 9390);
+	SelectMsg(UID, 2, savenum, 8684, NPC, 14, 193);
+end
+
+if (EVENT == 9367) then
+	MonsterCount1 = CountMonsterQuestSub(UID, 899, 1);
+	if (MonsterCount < 1) then
+		SelectMsg(UID, 2, savenum, 8684, NPC, 18, 9370);
+	else
+		SelectMsg(UID, 4, savenum, 8684, NPC, 4172, 9369, 4173, 193);
+	end
+end
+
+if (EVENT == 9370) then
+	ShowMap(UID, 489);
+end
+
+if (EVENT == 9369) then
+	ExpChange(UID, 15000000)
+	SaveEvent(UID, 9389);   
+end
