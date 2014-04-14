@@ -16,6 +16,9 @@ enum MerchantOpenResponseCodes
 
 void CUser::MerchantProcess(Packet & pkt)
 {
+	// Currently disabled...
+	return;
+
 	uint8 opcode = pkt.read<uint8>();
 	switch (opcode)
 	{

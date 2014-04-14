@@ -871,6 +871,7 @@ void CGameServerDlg::Send_UnitRegion(Packet *pkt, C3DMap *pMap, int x, int z, CU
 
 	FastGuard lock(pMap->m_lock);
 	CRegion *pRegion = pMap->GetRegion(x, z);
+
 	if (pRegion == nullptr)
 		return;
 

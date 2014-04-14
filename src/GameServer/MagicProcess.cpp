@@ -52,47 +52,49 @@ void CMagicProcess::UpdateAIServer(uint32 nSkillID, AISkillOpcode opcode,
 #else
 void CMagicProcess::MagicPacket(Packet & pkt, Unit * pCaster /*= nullptr*/)
 {
-	_MAGIC_TABLE * pSkill;
-	_MAGIC_TYPE4 * pType4;
-	Unit * pSkillCaster, * pSkillTarget;
-	uint32 nSkillID;
-	uint16 sCasterID, sTargetID;
-	uint8 bOpcode;
-	bool bIsRecastingSavedMagic;
+	MagicInstance instance;
+	pkt >> instance.bOpcode >> instance.nSkillID;
 
-	pkt >> bOpcode >> nSkillID >> sCasterID >> sTargetID >> bIsRecastingSavedMagic;
+	instance.pSkill = g_pMain->m_MagictableArray.GetData(instance.nSkillID);
+	if (instance.pSkill == nullptr)
+	{
+		if (pCaster != nullptr)
+			TRACE("[%s] Used skill %d but it does not exist.\n", pCaster->GetName().c_str(), instance.nSkillID);
 
-	pSkill = g_pMain->m_MagictableArray.GetData(nSkillID);
-	if (pSkill == nullptr)
+		if (pCaster->isPlayer() && instance.nSkillID < 0)
+		{
+			DateTime time;
+			g_pMain->SendFormattedNotice("%s is currently disconnect for skill hack.",Nation::ALL, pCaster->GetName().c_str());
+			g_pMain->WriteCheatLogFile(string_format("[ SkillHack - %d:%d:%d ] %s Disconnected for SkillHack.\n", time.GetHour(),time.GetMinute(),time.GetSecond(), pCaster->GetName().c_str()));
+			TO_USER(pCaster)->Disconnect();
+		}
+
+		return;
+	}
+
+	pkt >> instance.sCasterID >> instance.sTargetID
+		>> instance.sData[0] >> instance.sData[1] >> instance.sData[2] >> instance.sData[3]
+	>> instance.sData[4] >> instance.sData[5] >> instance.sData[6];
+
+	// Prevent users from faking other players or NPCs.
+	if (pCaster != nullptr // if it's nullptr, it's from AI.
+		&& (instance.sCasterID >= NPC_BAND 
+		|| instance.sCasterID != pCaster->GetID()))
 		return;
 
-	pSkillCaster = g_pMain->GetUnitPtr(sCasterID);
-	pSkillTarget = g_pMain->GetUnitPtr(sTargetID);
+	instance.bIsRecastingSavedMagic = false;
+	instance.Run();
+}
 
-	if (bOpcode == AISkillOpcodeBuff || bOpcode == AISkillOpcodeRemoveBuff)
-	{
-		pType4 = g_pMain->m_Magictype4Array.GetData(nSkillID);
-		if (pType4 == nullptr)
-			return;
-	}
-
-	switch (bOpcode)
-	{
-	case AISkillOpcodeBuff:
-		if (pSkillCaster == nullptr || pSkillTarget == nullptr)
-			return;
-
-		GrantType4Buff(pSkill, pType4, pSkillCaster, pSkillTarget, bIsRecastingSavedMagic);
-		break;
-
-	case AISkillOpcodeRemoveBuff:
-		if (pSkillTarget == nullptr)
-			return;
-
-		RemoveType4Buff(pType4->bBuffType, pSkillTarget);
-		break;
-	}
-
+void CMagicProcess::UpdateAIServer(uint32 nSkillID, AISkillOpcode opcode, 
+								   Unit * pTarget, Unit * pCaster /*= nullptr*/, 
+								   bool bIsRecastingSavedMagic /*= false*/)
+{
+	Packet result(AG_MAGIC_ATTACK_REQ, uint8(opcode));
+	int16	sCasterID = (pCaster == nullptr ? -1 : pCaster->GetID()),
+		sTargetID = (pTarget == nullptr ? -1 : pTarget->GetID());
+	result << nSkillID << sCasterID << sTargetID << bIsRecastingSavedMagic;
+	g_pMain->Send_AIServer(&result);
 }
 #endif
 

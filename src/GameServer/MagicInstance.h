@@ -101,6 +101,11 @@ public:
 
 	bool IsAvailable();
 	SkillUseResult UserCanCast();
+	SkillUseResult CheckSkillPrerequisites();
+
+	bool CheckType3Prerequisites();
+	bool CheckType4Prerequisites();
+	bool CheckType6Prerequisites();
 
 	bool CheckType3Prerequisites();
 	bool CheckType4Prerequisites();
