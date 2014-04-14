@@ -13,6 +13,7 @@ struct _USER_SEAL_ITEM;
 typedef std::map<uint64, _USER_SEAL_ITEM*>	UserItemSealMap;
 typedef	std::list<_EXCHANGE_ITEM*>			ItemList;
 typedef	std::map<uint32, time_t>			SkillCooldownList;
+typedef	std::map<uint8, time_t>				MagicTypeCooldownList;
 typedef	std::map<uint16, time_t>			RHitRepeatList; 
 typedef	std::map<uint32, time_t>			UserSavedMagicMap;
 
