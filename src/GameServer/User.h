@@ -171,8 +171,12 @@ public:
 	// Anger gauge system 
 	uint8	m_byAngerGauge; // values range from 0-5
 
+
 	// Magic System Cooldown checks
 	SkillCooldownList	m_CoolDownList;
+
+	// Magic System Same time magic type checks
+	MagicTypeCooldownList	m_MagicTypeCooldownList;
 
 	// Attack System Cooldown checks
 	RHitRepeatList	m_RHitRepeatList;
