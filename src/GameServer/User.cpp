@@ -1088,6 +1088,11 @@ void CUser::SetZoneAbilityChange(uint16 sNewZone)
 
 	if (sNewZone == ZONE_BIFROST || sNewZone == ZONE_BATTLE4  || sNewZone ==  ZONE_RONARK_LAND)
 		g_pMain->SendEventRemainingTime(false, this, (uint8)sNewZone);
+		
+	// Clear skill cooldowns...
+	m_RHitRepeatList.clear();
+	m_CoolDownList.clear();
+	m_MagicTypeCooldownList.clear();
 }
 
 /**
