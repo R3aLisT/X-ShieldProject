@@ -19,9 +19,9 @@ enum
 };
 
 #define NO_ACTION				0
-#define ATTACK_TO_TRACE			1				// °ø°Ý¿¡¼­ Ãß°Ý
-#define LONG_ATTACK_RANGE		30				// Àå°Å¸® °ø°Ý À¯È¿°Å¸®
-#define SHORT_ATTACK_RANGE		3				// Á÷Á¢°ø°Ý À¯È¿°Å¸®
+#define ATTACK_TO_TRACE			1				// ï¿½ï¿½ï¿½Ý¿ï¿½ï¿½ï¿½ ï¿½ß°ï¿½
+#define LONG_ATTACK_RANGE		30				// ï¿½ï¿½ï¿½Å¸ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½È¿ï¿½Å¸ï¿½
+#define SHORT_ATTACK_RANGE		3				// ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½È¿ï¿½Å¸ï¿½
 
 #define ARROW_MIN				391010000
 #define ARROW_MAX				392010000
@@ -388,9 +388,9 @@ time_t CNpc::NpcTracing()
 	{
 		if (!ResetPath())// && !m_tNpcTraceType)
 		{
-			TRACE("##### NpcTracing Fail : ÆÐ½ºÆÄÀÎµå ½ÇÆÐ , NPC_STANDINGÀ¸·Î ######\n");
+			TRACE("##### NpcTracing Fail : ï¿½Ð½ï¿½ï¿½ï¿½ï¿½Îµï¿½ ï¿½ï¿½ï¿½ï¿½ , NPC_STANDINGï¿½ï¿½ï¿½ï¿½ ######\n");
 			InitTarget();
-			NpcMoveEnd();	// ÀÌµ¿ ³¡..
+			NpcMoveEnd();	// ï¿½Ìµï¿½ ï¿½ï¿½..
 			m_NpcState = NPC_STANDING;
 			return m_sStandTime;
 		}
@@ -400,7 +400,7 @@ time_t CNpc::NpcTracing()
 		|| (m_bPathFlag && !StepNoPathMove()))
 	{
 		m_NpcState = NPC_STANDING;
-		TRACE("### NpcTracing Fail : StepMove ½ÇÆÐ, %s, %d ### \n", GetName().c_str(), GetID());
+		TRACE("### NpcTracing Fail : StepMove ï¿½ï¿½ï¿½ï¿½, %s, %d ### \n", GetName().c_str(), GetID());
 		return m_sStandTime;
 	}
 
@@ -814,7 +814,7 @@ bool CNpc::RandomMove()
 		bPeedBack = isInSpawnRange((int)GetX(), (int)GetZ());
 		if (bPeedBack == false)
 		{	
-			//TRACE("ÃÊ±âÀ§Ä¡¸¦ ¹þ¾î³µ±º,,,  patten=%d \n", m_iPattenFrame);
+			//TRACE("ï¿½Ê±ï¿½ï¿½ï¿½Ä¡ï¿½ï¿½ ï¿½ï¿½ï¿½î³µï¿½ï¿½,,,  patten=%d \n", m_iPattenFrame);
 		}
 
 		if (m_iPattenFrame == 0)		
@@ -864,7 +864,7 @@ bool CNpc::RandomMove()
 
 			if (nPathCount  == -1)	
 			{
-				TRACE("##### RandomMove Fail : [nid = %d, sid=%d], path = %d/%d, ÀÌµ¿ÇÒ ¼ö ÀÖ´Â °Å¸®¿¡¼­ ³Ê¹« ¸Ö¾îÁ³´ç,, ¾îÄÉÇØ #####\n", 
+				TRACE("##### RandomMove Fail : [nid = %d, sid=%d], path = %d/%d, ï¿½Ìµï¿½ï¿½ï¿½ ï¿½ï¿½ ï¿½Ö´ï¿½ ï¿½Å¸ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½Ê¹ï¿½ ï¿½Ö¾ï¿½ï¿½ï¿½ï¿½ï¿½,, ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ #####\n", 
 					GetID(), GetProtoID(), m_sPathCount, m_sMaxPathCount);
 
 				vStart.Set(GetX(), GetY(), GetZ());
@@ -907,7 +907,7 @@ bool CNpc::RandomMove()
 			nPathCount = GetNearPathPoint();
 			if (nPathCount  == -1)	
 			{
-				TRACE("##### RandomMove Fail : [nid = %d, sid=%d], path = %d/%d, ÀÌµ¿ÇÒ ¼ö ÀÖ´Â °Å¸®¿¡¼­ ³Ê¹« ¸Ö¾îÁ³´ç,, ¾îÄÉÇØ #####\n", GetID(), GetProtoID(), m_sPathCount, m_sMaxPathCount);
+				TRACE("##### RandomMove Fail : [nid = %d, sid=%d], path = %d/%d, ï¿½Ìµï¿½ï¿½ï¿½ ï¿½ï¿½ ï¿½Ö´ï¿½ ï¿½Å¸ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½Ê¹ï¿½ ï¿½Ö¾ï¿½ï¿½ï¿½ï¿½ï¿½,, ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ #####\n", GetID(), GetProtoID(), m_sPathCount, m_sMaxPathCount);
 				vStart.Set(GetX(), GetY(), GetZ());
 				fDestX = (float)m_PathList.pPattenPos[0].x + m_fBattlePos_x;
 				fDestZ = (float)m_PathList.pPattenPos[0].z + m_fBattlePos_z;
@@ -1046,7 +1046,7 @@ bool CNpc::RandomBackMove()
 	float fDis = 0.0f;
 	vStart.Set(GetX(), GetY(), GetZ());
 
-	uint16 nID = m_Target.id;					// Target À» ±¸ÇÑ´Ù.
+	uint16 nID = m_Target.id;					// Target ï¿½ï¿½ ï¿½ï¿½ï¿½Ñ´ï¿½.
 	CUser* pUser = nullptr;
 
 	int iDir = 0;
@@ -1071,7 +1071,7 @@ bool CNpc::RandomBackMove()
 			else
 				iDir = 2;
 		}
-		else	// zÃàÀ¸·Î
+		else	// zï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
 		{
 			iRandomZ = myrand((int)m_bySearchRange, (int)(m_bySearchRange*1.5));
 			iRandomX = myrand(0, (int)m_bySearchRange);
@@ -1115,7 +1115,7 @@ bool CNpc::RandomBackMove()
 
 		vEnd.Set(fDestX, 0, fDestZ);
 		fDis = GetDistance(vStart, vEnd);
-		if(fDis > 20)	// 20¹ÌÅÍ ÀÌ»óÀÌ¸é 20¹ÌÅÍ·Î ¸ÂÃá´Ù,,
+		if(fDis > 20)	// 20ï¿½ï¿½ï¿½ï¿½ ï¿½Ì»ï¿½ï¿½Ì¸ï¿½ 20ï¿½ï¿½ï¿½Í·ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½,,
 		{
 			GetVectorPosition(vStart, vEnd, 20, &vEnd22);
 			fDestX = vEnd22.x;
@@ -1209,7 +1209,7 @@ bool CNpc::isInSpawnRange(int nX, int nZ)
 }
 
 /////////////////////////////////////////////////////////////////////////////////////////
-//	PathFind ¸¦ ¼öÇàÇÑ´Ù.
+//	PathFind ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½Ñ´ï¿½.
 //
 int CNpc::PathFind(CPoint start, CPoint end, float fDistance)
 {
@@ -1286,7 +1286,7 @@ void CNpc::Dead(Unit * pKiller /*= nullptr*/, bool bSendDeathPacket /*= false*/)
 	m_NpcState = NPC_DEAD;
 	m_Delay = m_sRegenTime;
 	m_bFirstLive = false;
-	m_byDeadType = 100;		// ÀüÀïÀÌº¥Æ®Áß¿¡¼­ Á×´Â °æ¿ì
+	m_byDeadType = 100;		// ï¿½ï¿½ï¿½ï¿½ï¿½Ìºï¿½Æ®ï¿½ß¿ï¿½ï¿½ï¿½ ï¿½×´ï¿½ ï¿½ï¿½ï¿½ï¿½
 
 	if (GetRegionX() > pMap->GetXRegionMax() || GetRegionZ() > pMap->GetZRegionMax())
 	{
@@ -1387,14 +1387,14 @@ bool CNpc::FindEnemy()
 		fCompareDis = FindEnemyExpand(GetRegionX(), GetRegionZ(), fCompareDis, UnitPlayer);
 
 		int x=0, y=0;
-		// ÀÌ¿ôÇØ ÀÖ´Â RegionÀ» °Ë»öÇØ¼­,,  ¸óÀÇ À§Ä¡¿Í Á¦ÀÏ °¡±î¿î UserÀ» ÇâÇØ.. ÀÌµ¿..
+		// ï¿½Ì¿ï¿½ï¿½ï¿½ ï¿½Ö´ï¿½ Regionï¿½ï¿½ ï¿½Ë»ï¿½ï¿½Ø¼ï¿½,,  ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½Ä¡ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ Userï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½.. ï¿½Ìµï¿½..
 		for(int l=0; l<4; l++)	{
 			if(m_iFind_X[l] == 0 && m_iFind_Y[l] == 0)		continue;
 
 			x = GetRegionX() + (m_iFind_X[l]);
 			y = GetRegionZ() + (m_iFind_Y[l]);
 
-			// ÀÌºÎºÐ ¼öÁ¤¿ä¸Á,,
+			// ï¿½ÌºÎºï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½,,
 			if (x < 0 || y < 0 || x > pMap->GetXRegionMax() || y > pMap->GetZRegionMax())		continue;
 
 			fCompareDis = FindEnemyExpand(x, y, fCompareDis, UnitPlayer);
@@ -1403,7 +1403,6 @@ bool CNpc::FindEnemy()
 		if (hasTarget() && (fCompareDis <= fSearchRange))		
 			return true;
 
-		return true;
 		fCompareDis = 0.0f;
 	}
 
@@ -1414,14 +1413,14 @@ bool CNpc::FindEnemy()
 
 		int x=0, y=0;
 
-		// ÀÌ¿ôÇØ ÀÖ´Â RegionÀ» °Ë»öÇØ¼­,,  ¸óÀÇ À§Ä¡¿Í Á¦ÀÏ °¡±î¿î UserÀ» ÇâÇØ.. ÀÌµ¿..
+		// ï¿½Ì¿ï¿½ï¿½ï¿½ ï¿½Ö´ï¿½ Regionï¿½ï¿½ ï¿½Ë»ï¿½ï¿½Ø¼ï¿½,,  ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½Ä¡ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ Userï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½.. ï¿½Ìµï¿½..
 		for(int l=0; l<4; l++)	{
 			if(m_iFind_X[l] == 0 && m_iFind_Y[l] == 0)			continue;
 
 			x = GetRegionX() + (m_iFind_X[l]);
 			y = GetRegionZ() + (m_iFind_Y[l]);
 
-			// ÀÌºÎºÐ ¼öÁ¤¿ä¸Á,,
+			// ï¿½ÌºÎºï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½,,
 			if(x < 0 || y < 0 || x > pMap->GetXRegionMax() || y > pMap->GetZRegionMax())	continue;
 
 			fCompareDis = FindEnemyExpand(x, y, fCompareDis, UnitNPC);
@@ -1431,13 +1430,13 @@ bool CNpc::FindEnemy()
 			return true;
 	}
 
-	// ¾Æ¹«µµ ¾øÀ¸¹Ç·Î ¸®½ºÆ®¿¡ °ü¸®ÇÏ´Â À¯Àú¸¦ ÃÊ±âÈ­ÇÑ´Ù.
+	// ï¿½Æ¹ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½Ç·ï¿½ ï¿½ï¿½ï¿½ï¿½Æ®ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½Ï´ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½Ê±ï¿½È­ï¿½Ñ´ï¿½.
 	InitUserList();		
 	InitTarget();
 	return false;
 }
 
-// Npc°¡ À¯Àú¸¦ °Ë»öÇÒ¶§ ¾î´À Region±îÁö °Ë»öÇØ¾ß ÇÏ´ÂÁö¸¦ ÆÇ´Ü..
+// Npcï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½Ë»ï¿½ï¿½Ò¶ï¿½ ï¿½ï¿½ï¿½ï¿½ Regionï¿½ï¿½ï¿½ï¿½ ï¿½Ë»ï¿½ï¿½Ø¾ï¿½ ï¿½Ï´ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½Ç´ï¿½..
 int CNpc::FindEnemyRegion()
 {
 	/*
@@ -1502,7 +1501,7 @@ int CNpc::FindEnemyRegion()
 		break;
 	}
 
-	if(iRetValue <= 0) // ÀÓ½Ã·Î º¸Á¤(¹®Á¦½Ã),, ÇÏ±â À§ÇÑ°Í..
+	if(iRetValue <= 0) // ï¿½Ó½Ã·ï¿½ ï¿½ï¿½ï¿½ï¿½(ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½),, ï¿½Ï±ï¿½ ï¿½ï¿½ï¿½Ñ°ï¿½..
 		iRetValue = 0;
 
 	switch(iRetValue)
@@ -1659,7 +1658,7 @@ float CNpc::FindEnemyExpand(int nRX, int nRZ, float fCompDis, UnitType unitType)
 	return fComp;
 }
 
-// regionÀ» 4µîºÐÇØ¼­ ¸ó½ºÅÍÀÇ ÇöÀç À§Ä¡°¡ regionÀÇ ¾î´À ºÎºÐ¿¡ µé¾î°¡´ÂÁö¸¦ ÆÇ´Ü
+// regionï¿½ï¿½ 4ï¿½ï¿½ï¿½ï¿½ï¿½Ø¼ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½Ä¡ï¿½ï¿½ regionï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ÎºÐ¿ï¿½ ï¿½ï¿½ï¿½î°¡ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½Ç´ï¿½
 int CNpc::GetMyField()
 {
 	int iRet = 0;
@@ -1694,17 +1693,17 @@ int CNpc::IsSurround(CUser* pUser)
 	if (GetProto()->m_byDirectAttack) 
 		return 0;
 
-	if(pUser == nullptr)	return -2;		// User°¡ ¾øÀ¸¹Ç·Î Å¸°ÙÁöÁ¤ ½ÇÆÐ..
+	if(pUser == nullptr)	return -2;		// Userï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½Ç·ï¿½ Å¸ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½..
 	int nDir = pUser->IsSurroundCheck(GetX(), 0.0f, GetZ(), GetID());
 	if(nDir != 0)
 	{
 		m_byAttackPos = nDir;
 		return nDir;
 	}
-	return -1;					// Å¸°ÙÀÌ µÑ·¯ ½×¿© ÀÖÀ½...
+	return -1;					// Å¸ï¿½ï¿½ï¿½ï¿½ ï¿½Ñ·ï¿½ ï¿½×¿ï¿½ ï¿½ï¿½ï¿½ï¿½...
 }
 
-//	Path Find ·Î Ã£Àº±æÀ» ´Ù ÀÌµ¿ Çß´ÂÁö ÆÇ´Ü
+//	Path Find ï¿½ï¿½ Ã£ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ ï¿½Ìµï¿½ ï¿½ß´ï¿½ï¿½ï¿½ ï¿½Ç´ï¿½
 bool CNpc::IsMovingEnd()
 {
 	if (m_fPrevX == m_fEndPoint_X && m_fPrevZ == m_fEndPoint_Y) 
@@ -1717,7 +1716,7 @@ bool CNpc::IsMovingEnd()
 	return false;
 }
 
-//	Step ¼ö ¸¸Å­ Å¸ÄÏÀ» ÇâÇØ ÀÌµ¿ÇÑ´Ù.
+//	Step ï¿½ï¿½ ï¿½ï¿½Å­ Å¸ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½Ìµï¿½ï¿½Ñ´ï¿½.
 bool CNpc::StepMove()
 {
 	if(m_NpcState != NPC_MOVING && m_NpcState != NPC_TRACING && m_NpcState != NPC_BACK) return false;
@@ -1737,7 +1736,7 @@ bool CNpc::StepMove()
 	vStart.Set(fOldCurX, 0, fOldCurZ);
 	vEnd.Set(m_pPoint[m_iAniFrameCount].fXPos, 0, m_pPoint[m_iAniFrameCount].fZPos);
 
-	// ¾ÈÀü ÄÚµå..
+	// ï¿½ï¿½ï¿½ï¿½ ï¿½Úµï¿½..
 	if(m_pPoint[m_iAniFrameCount].fXPos < 0 || m_pPoint[m_iAniFrameCount].fZPos < 0)
 	{
 		m_fPrevX = m_fEndPoint_X;
@@ -1761,7 +1760,7 @@ bool CNpc::StepMove()
 		{
 			vEnd.Set(m_pPoint[m_iAniFrameCount].fXPos, 0, m_pPoint[m_iAniFrameCount].fZPos);
 			fDis = GetDistance(vStart, vEnd);
-			// ¸¶Áö¸· ÁÂÇ¥´Â m_fSecForMetor ~ m_fSecForMetor+1 »çÀÌµµ °¡´ÉÇÏ°Ô ÀÌµ¿
+			// ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½Ç¥ï¿½ï¿½ m_fSecForMetor ~ m_fSecForMetor+1 ï¿½ï¿½ï¿½Ìµï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½Ï°ï¿½ ï¿½Ìµï¿½
 			if(fDis > m_fSecForMetor)
 			{
 				GetVectorPosition(vStart, vEnd, m_fSecForMetor, &vDis);
@@ -1873,7 +1872,7 @@ CloseTargetResult CNpc::IsCloseTarget(int nRange, AttackType attackType)
 	CNpc * pNpc = nullptr;
 	__Vector3 vUser, vWillUser, vNpc, vDistance;
 	float fDis = 0.0f, fWillDis = 0.0f, fX = 0.0f, fZ = 0.0f;
-	bool  bUserType = false;	// Å¸°ÙÀÌ À¯ÀúÀÌ¸é true
+	bool  bUserType = false;	// Å¸ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½Ì¸ï¿½ true
 	vNpc.Set(GetX(), GetY(), GetZ());
 
 	if (m_Target.id < NPC_BAND)	
@@ -1969,7 +1968,7 @@ CloseTargetResult CNpc::IsCloseTarget(int nRange, AttackType attackType)
 	return CloseTargetNotInRange;
 }
 
-//	Target °ú NPC °£ Path FindingÀ» ¼öÇàÇÑ´Ù.
+//	Target ï¿½ï¿½ NPC ï¿½ï¿½ Path Findingï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½Ñ´ï¿½.
 int CNpc::GetTargetPath(int option)
 {
 	int nInitType = m_byInitMoveType;
@@ -2001,16 +2000,16 @@ int CNpc::GetTargetPath(int option)
 			return -1;
 		}
 
-		if(option == 1)	{	// magicÀÌ³ª È°µîÀ¸·Î °ø°Ý ´çÇß´Ù¸é...
+		if(option == 1)	{	// magicï¿½Ì³ï¿½ È°ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ß´Ù¸ï¿½...
 			vNpc.Set(GetX(), GetY(), GetZ());
 			vUser.Set(pUser->GetX(), pUser->GetY(), pUser->GetZ()); 
 			fDis = GetDistance(vNpc, vUser);
-			if(fDis >= NPC_MAX_MOVE_RANGE)		return -1;	// ³Ê¹« °Å¸®°¡ ¸Ö¾î¼­,, ÃßÀûÀÌ ¾ÈµÇ°Ô..
+			if(fDis >= NPC_MAX_MOVE_RANGE)		return -1;	// ï¿½Ê¹ï¿½ ï¿½Å¸ï¿½ï¿½ï¿½ ï¿½Ö¾î¼­,, ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ÈµÇ°ï¿½..
 			iTempRange = fDis + 10;
 		}
 		else	{
-			iTempRange = (float)m_bySearchRange;				// ÀÏ½ÃÀûÀ¸·Î º¸Á¤ÇÑ´Ù.
-			if(IsDamagedUserList(pUser)) iTempRange = (float)m_byTracingRange;	// °ø°Ý¹ÞÀº »óÅÂ¸é Ã£À» ¹üÀ§ Áõ°¡.
+			iTempRange = (float)m_bySearchRange;				// ï¿½Ï½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½Ñ´ï¿½.
+			if(IsDamagedUserList(pUser)) iTempRange = (float)m_byTracingRange;	// ï¿½ï¿½ï¿½Ý¹ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½Â¸ï¿½ Ã£ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½.
 			else iTempRange += 2;
 		}
 
@@ -2022,7 +2021,7 @@ int CNpc::GetTargetPath(int option)
 		}
 	}
 	// NPC
-	else if(m_Target.id >= NPC_BAND && m_Target.id < INVALID_BAND)	{	// Target ÀÌ mon ÀÎ °æ¿ì
+	else if(m_Target.id >= NPC_BAND && m_Target.id < INVALID_BAND)	{	// Target ï¿½ï¿½ mon ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½
 		pNpc = g_pMain->GetNpcPtr(m_Target.id);
 		if(pNpc == nullptr) {
 			InitTarget();
@@ -2033,7 +2032,7 @@ int CNpc::GetTargetPath(int option)
 			return -1;
 		}
 
-		iTempRange = (float)m_byTracingRange;				// ÀÏ½ÃÀûÀ¸·Î º¸Á¤ÇÑ´Ù.
+		iTempRange = (float)m_byTracingRange;				// ï¿½Ï½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½Ñ´ï¿½.
 	}
 
 	MAP* pMap = GetMap();
@@ -2187,7 +2186,7 @@ time_t CNpc::Attack()
 	}
 
 	int		nDamage		= 0;
-	uint16 nID = m_Target.id;					// Target À» ±¸ÇÑ´Ù.
+	uint16 nID = m_Target.id;					// Target ï¿½ï¿½ ï¿½ï¿½ï¿½Ñ´ï¿½.
 
 	// Targeting player
 	if (nID < NPC_BAND)	
@@ -2459,7 +2458,7 @@ bool CNpc::GetTargetPos(float& x, float& z)
 	return true;
 }
 
-//	Target °ú NPC °£¿¡ ±æÃ£±â¸¦ ´Ù½ÃÇÑ´Ù.
+//	Target ï¿½ï¿½ NPC ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½Ã£ï¿½â¸¦ ï¿½Ù½ï¿½ï¿½Ñ´ï¿½.
 bool CNpc::ResetPath()
 {
 	float cur_x, cur_z;
@@ -2471,14 +2470,14 @@ bool CNpc::ResetPath()
 	m_Target.z = cur_z;
 
 	int nValue = GetTargetPath();
-	if(nValue == -1)		// Å¸°ÙÀÌ ¾ø¾îÁö°Å³ª,, ¸Ö¾îÁ³À½À¸·Î...
+	if(nValue == -1)		// Å¸ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Å³ï¿½,, ï¿½Ö¾ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½...
 	{
 		TRACE("Npc-ResetPath Fail - target_x = %.2f, z=%.2f, value=%d\n", m_Target.x, m_Target.z, nValue);
 		return false;
 	}
-	else if(nValue == 0)	// Å¸°Ù ¹æÇâÀ¸·Î ¹Ù·Î °£´Ù..
+	else if(nValue == 0)	// Å¸ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½Ù·ï¿½ ï¿½ï¿½ï¿½ï¿½..
 	{
-		m_fSecForMetor = m_fSpeed_2;	// °ø°ÝÀÏ¶§´Â ¶Ù´Â ¼Óµµ·Î... 
+		m_fSecForMetor = m_fSpeed_2;	// ï¿½ï¿½ï¿½ï¿½ï¿½Ï¶ï¿½ï¿½ï¿½ ï¿½Ù´ï¿½ ï¿½Óµï¿½ï¿½ï¿½... 
 		IsNoPathFind(m_fSecForMetor);
 	}
 
@@ -2546,7 +2545,7 @@ void CNpc::ChangeTarget(int nAttackType, CUser *pUser)
 			if(preDamage > lastDamage) return;
 		}
 	}
-	else if(preUser == nullptr && nAttackType == 1004)		return;		// Heal magic¿¡ ¹ÝÀÀÇÏÁö ¾Êµµ·Ï..
+	else if(preUser == nullptr && nAttackType == 1004)		return;		// Heal magicï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½Êµï¿½ï¿½ï¿½..
 
 	m_Target.id	= pUser->GetID();
 	m_Target.bSet = true;
@@ -2557,18 +2556,18 @@ void CNpc::ChangeTarget(int nAttackType, CUser *pUser)
 	//TRACE("Npc-changeTarget - target_x = %.2f, z=%.2f\n", m_Target.x, m_Target.z);
 
 	int nValue = 0;
-	// ¾î½½·· °Å¸®´Âµ¥ °ø°ÝÇÏ¸é ¹Ù·Î ¹Ý°Ý
+	// ï¿½î½½ï¿½ï¿½ ï¿½Å¸ï¿½ï¿½Âµï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½Ï¸ï¿½ ï¿½Ù·ï¿½ ï¿½Ý°ï¿½
 	if(m_NpcState == NPC_STANDING || m_NpcState == NPC_MOVING || m_NpcState == NPC_SLEEPING)
-	{									// °¡±îÀÌ ÀÖÀ¸¸é ¹Ý°ÝÀ¸·Î ÀÌ¾îÁö±¸
+	{									// ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½Ý°ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½Ì¾ï¿½ï¿½ï¿½ï¿½ï¿½
 		if(IsCloseTarget(pUser, m_byAttackRange) == true)
 		{
 			m_NpcState = NPC_FIGHTING;
 			m_Delay = 0;
 		}
-		else							// ¹Ù·Î µµ¸Á°¡¸é ÁÂÇ¥¸¦ °»½ÅÇÏ°í ÃßÀû	
+		else							// ï¿½Ù·ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½Ç¥ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½Ï°ï¿½ ï¿½ï¿½ï¿½ï¿½	
 		{
 			nValue = GetTargetPath(1);
-			if(nValue == 1)	// ¹Ý°Ý µ¿ÀÛÈÄ ¾à°£ÀÇ µô·¹ÀÌ ½Ã°£ÀÌ ÀÖÀ½	
+			if(nValue == 1)	// ï¿½Ý°ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½à°£ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½Ã°ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½	
 			{
 				m_NpcState = NPC_TRACING;
 				m_Delay = 0;
@@ -2580,20 +2579,20 @@ void CNpc::ChangeTarget(int nAttackType, CUser *pUser)
 			}
 			else if(nValue == 0)
 			{
-				m_fSecForMetor = m_fSpeed_2;	// °ø°ÝÀÏ¶§´Â ¶Ù´Â ¼Óµµ·Î... 
+				m_fSecForMetor = m_fSpeed_2;	// ï¿½ï¿½ï¿½ï¿½ï¿½Ï¶ï¿½ï¿½ï¿½ ï¿½Ù´ï¿½ ï¿½Óµï¿½ï¿½ï¿½... 
 				IsNoPathFind(m_fSecForMetor);
 				m_NpcState = NPC_TRACING;
 				m_Delay = 0;
 			}
 		}
 	}
-	//	else m_NpcState = NPC_ATTACKING;	// ÇÑÂü °ø°ÝÇÏ´Âµ¥ ´©°¡ ¹æÇØÇÏ¸é ¸ñÇ¥¸¦ ¹Ù²Þ
+	//	else m_NpcState = NPC_ATTACKING;	// ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½Ï´Âµï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½Ï¸ï¿½ ï¿½ï¿½Ç¥ï¿½ï¿½ ï¿½Ù²ï¿½
 
 	if (m_bHasFriends || GetType() == NPC_BOSS)	 
 		FindFriend(GetType() == NPC_BOSS ? MonSearchAny : MonSearchSameFamily);
 }
 
-//	³ª¸¦ °ø°ÝÇÑ Npc¸¦ Å¸°ÙÀ¸·Î »ï´Â´Ù.(±âÁØ : ·¾°ú HP¸¦ ±âÁØÀ¸·Î ¼±Á¤)
+//	ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ Npcï¿½ï¿½ Å¸ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½Â´ï¿½.(ï¿½ï¿½ï¿½ï¿½ : ï¿½ï¿½ï¿½ï¿½ HPï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½)
 void CNpc::ChangeNTarget(CNpc *pNpc)
 {
 	int preDamage, lastDamage;
@@ -2659,7 +2658,7 @@ void CNpc::ChangeNTarget(CNpc *pNpc)
 			}
 		}
 	}
-	//	else m_NpcState = NPC_ATTACKING;	// ÇÑÂü °ø°ÝÇÏ´Âµ¥ ´©°¡ ¹æÇØÇÏ¸é ¸ñÇ¥¸¦ ¹Ù²Þ
+	//	else m_NpcState = NPC_ATTACKING;	// ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½Ï´Âµï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½Ï¸ï¿½ ï¿½ï¿½Ç¥ï¿½ï¿½ ï¿½Ù²ï¿½
 
 	if (m_bHasFriends)
 		FindFriend();
@@ -3143,7 +3142,7 @@ bool CNpc::GetUserInView()
 {
 	MAP* pMap = GetMap();
 	if (pMap == nullptr)	return false;
-	//if( m_ZoneIndex > 5 || m_ZoneIndex < 0) return false;		// ÀÓ½ÃÄÚµå ( 2002.03.24 )
+	//if( m_ZoneIndex > 5 || m_ZoneIndex < 0) return false;		// ï¿½Ó½ï¿½ï¿½Úµï¿½ ( 2002.03.24 )
 	int min_x = (int)(GetX() - NPC_VIEW_RANGE)/VIEW_DIST;	if(min_x < 0) min_x = 0;
 	int min_z = (int)(GetZ() - NPC_VIEW_RANGE)/VIEW_DIST;	if(min_z < 0) min_z = 0;
 	int max_x = (int)(GetX() + NPC_VIEW_RANGE)/VIEW_DIST;	if(max_x > pMap->GetXRegionMax()) max_x = pMap->GetXRegionMax();
@@ -3257,7 +3256,7 @@ bool CNpc::IsPathFindCheck(float fDistance)
 	return true;
 }
 
-// ÆÐ½º ÆÄÀÎµå¸¦ ÇÏÁö ¾Ê°í °ø°Ý´ë»óÀ¸·Î °¡´Â ·çÆ¾..
+// ï¿½Ð½ï¿½ ï¿½ï¿½ï¿½Îµå¸¦ ï¿½ï¿½ï¿½ï¿½ ï¿½Ê°ï¿½ ï¿½ï¿½ï¿½Ý´ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½Æ¾..
 void CNpc::IsNoPathFind(float fDistance)
 {
 	ClearPathFindData();
@@ -3273,7 +3272,7 @@ void CNpc::IsNoPathFind(float fDistance)
 	int nError = 0;
 
 	fDis = GetDistance(vStart, vEnd);	
-	if(fDis > NPC_MAX_MOVE_RANGE)	{						// 100¹ÌÅÍ º¸´Ù ³ÐÀ¸¸é ½ºÅÄµù»óÅÂ·Î..
+	if(fDis > NPC_MAX_MOVE_RANGE)	{						// 100ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½Äµï¿½ï¿½ï¿½ï¿½Â·ï¿½..
 		ClearPathFindData();
 		TRACE("#### Npc-IsNoPathFind Fail : NPC_MAX_MOVE_RANGE overflow  .. [nid = %d, name=%s], cur_x=%.2f, z=%.2f, dest_x=%.2f, dest_z=%.2f, fDis=%.2f#####\n", 
 			GetID(), GetName().c_str(), m_fStartPoint_X, m_fStartPoint_Y, m_fEndPoint_X, m_fEndPoint_Y, fDis);
@@ -3454,7 +3453,7 @@ bool CNpc::CheckFindEnemy()
 	return false;
 }
 
-int	CNpc::ItemProdution(int item_number)							// ¾ÆÀÌÅÛ Á¦ÀÛ
+int	CNpc::ItemProdution(int item_number)							// ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½
 {
 	int iItemNumber = 0, iRandom = 0, i=0, iItemGrade = 0, iItemLevel = 0;
 	int iDefault = 0, iItemCode=0, iItemKey=0, iRand2=0, iRand3=0, iRand4=0, iRand5=0;
@@ -3466,9 +3465,9 @@ int	CNpc::ItemProdution(int item_number)							// ¾ÆÀÌÅÛ Á¦ÀÛ
 	if(iItemGrade == 0)		return 0;
 	iItemLevel = GetLevel() / 5;
 
-	if( COMPARE( iRandom, 1, 4001) )	{			// ¹«±â±¸ ¾ÆÀÌÅÛ
+	if( COMPARE( iRandom, 1, 4001) )	{			// ï¿½ï¿½ï¿½â±¸ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
 		iDefault = 100000000;
-		iRandom = myrand( 1, 10000 );				// ¹«±âÀÇ Á¾·ù¸¦ °áÁ¤(´Ü°Ë, °Ë, µµ³¢,,,,)
+		iRandom = myrand( 1, 10000 );				// ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½(ï¿½Ü°ï¿½, ï¿½ï¿½, ï¿½ï¿½ï¿½ï¿½,,,,)
 		if( COMPARE ( iRandom, 1, 701 ) )			iRand2 = 10000000;
 		else if( COMPARE ( iRandom, 701, 1401 ) )	iRand2 = 20000000;
 		else if( COMPARE ( iRandom, 1401, 2101 ) )	iRand2 = 30000000;
@@ -3482,18 +3481,18 @@ int	CNpc::ItemProdution(int item_number)							// ¾ÆÀÌÅÛ Á¦ÀÛ
 		iTemp1 = GetWeaponItemCodeNumber(true);
 		//TRACE("ItemProdution : GetWeaponItemCodeNumber() = %d, iRand2=%d\n", iTemp1, iRand2);
 		if( iTemp1 == 0 )	return 0;
-		iItemCode = iTemp1 * 100000;	// ·çÆÃºÐÆ÷Ç¥ ÂüÁ¶
+		iItemCode = iTemp1 * 100000;	// ï¿½ï¿½ï¿½Ãºï¿½ï¿½ï¿½Ç¥ ï¿½ï¿½ï¿½ï¿½
 
-		iRand3 = myrand(1, 10000);					// Á¾Á·(¿¤¸ð, Ä«·ç½º)
+		iRand3 = myrand(1, 10000);					// ï¿½ï¿½ï¿½ï¿½(ï¿½ï¿½ï¿½ï¿½, Ä«ï¿½ç½º)
 		if( COMPARE( iRand3, 1, 5000) )	iRand3 = 10000;
 		else	iRand3 = 50000;
-		iRand4 = myrand(1, 10000);					// ÇÑ¼Õ, ¾ç¼Õ¹«±âÀÎÁö¸¦ °áÁ¤
+		iRand4 = myrand(1, 10000);					// ï¿½Ñ¼ï¿½, ï¿½ï¿½ï¿½Õ¹ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½
 		if( COMPARE( iRand4, 1, 5000) )	iRand4 = 0;
 		else	iRand4 = 5000000;
 
-		iRandom = GetItemCodeNumber(iItemLevel, 1);	// ·¹ÀÌ¸ÅÁ÷Ç¥ Àû¿ë
+		iRandom = GetItemCodeNumber(iItemLevel, 1);	// ï¿½ï¿½ï¿½Ì¸ï¿½ï¿½ï¿½Ç¥ ï¿½ï¿½ï¿½ï¿½
 		//TRACE("ItemProdution : GetItemCodeNumber() = %d, iRand2=%d, iRand3=%d, iRand4=%d\n", iRandom, iRand2, iRand3, iRand4);
-		if(iRandom == -1)	{						// Àß¸øµÈ ¾ÆÀÌÅÛ »ý¼º½ÇÆÐ
+		if(iRandom == -1)	{						// ï¿½ß¸ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
 			return 0;
 		}
 		iRand5 = iRandom * 10;
@@ -3501,92 +3500,92 @@ int	CNpc::ItemProdution(int item_number)							// ¾ÆÀÌÅÛ Á¦ÀÛ
 
 		//TRACE("ItemProdution : Weapon Success item_number = %d, default=%d, itemcode=%d, iRand2=%d, iRand3=%d, iRand4=%d, iRand5, iItemGrade=%d\n", iItemNumber, iDefault, iItemCode, iRand2, iRand3, iRand4, iRand5, iItemGrade);
 	}
-	else if( COMPARE( iRandom, 4001, 8001) )	{		// ¹æ¾î±¸ ¾ÆÀÌÅÛ
+	else if( COMPARE( iRandom, 4001, 8001) )	{		// ï¿½ï¿½ï¿½î±¸ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
 		iDefault = 200000000;			
 
 		iTemp1 = GetWeaponItemCodeNumber(false);
 		//TRACE("ItemProdution : GetWeaponItemCodeNumber() = %d\n", iTemp1 );
 		if( iTemp1 == 0 )	return 0;
-		iItemCode = iTemp1 * 1000000;		// ·çÆÃºÐÆ÷Ç¥ ÂüÁ¶
+		iItemCode = iTemp1 * 1000000;		// ï¿½ï¿½ï¿½Ãºï¿½ï¿½ï¿½Ç¥ ï¿½ï¿½ï¿½ï¿½
 
-		if( m_byMaxDamagedNation == KARUS )	{		// Á¾Á·
-			iRandom = myrand(0, 10000);					// Á÷¾÷ÀÇ °©¿ÊÀ» °áÁ¤		
+		if( m_byMaxDamagedNation == KARUS )	{		// ï¿½ï¿½ï¿½ï¿½
+			iRandom = myrand(0, 10000);					// ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½		
 			if( COMPARE( iRandom, 0, 2000) )	{		
 				iRand2 = 0;	
-				iRand3 = 10000;							// Àü»ç°©¿ÊÀº ¾ÆÅ©Åõ¾Æ·º¸¸ °¡Áöµµ·Ï
+				iRand3 = 10000;							// ï¿½ï¿½ï¿½ç°©ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½Å©ï¿½ï¿½ï¿½Æ·ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
 			}
 			else if( COMPARE( iRandom, 2000, 4000) )	{
 				iRand2 = 40000000;
-				iRand3 = 20000;							// ·Î±×°©¿ÊÀº Åõ¾Æ·º¸¸ °¡Áöµµ·Ï
+				iRand3 = 20000;							// ï¿½Î±×°ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½Æ·ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
 			}
 			else if( COMPARE( iRandom, 4000, 6000) )	{
 				iRand2 = 60000000;
-				iRand3 = 30000;							// ¸¶¹ý»ç°©¿ÊÀº ¸µÅ¬ Åõ¾Æ·º¸¸ °¡Áöµµ·Ï
+				iRand3 = 30000;							// ï¿½ï¿½ï¿½ï¿½ï¿½ç°©ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½Å¬ ï¿½ï¿½ï¿½Æ·ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
 			}
 			else if( COMPARE( iRandom, 6000, 10001) )	{
 				iRand2 = 80000000;
 				iRandom = myrand(0, 10000);
-				if( COMPARE( iRandom, 0, 5000) )	iRand3 = 20000;	// »çÁ¦°©¿ÊÀº Åõ¾Æ·º
-				else								iRand3 = 40000;	// »çÁ¦°©¿ÊÀº Ç»¸®Åõ¾Æ·º
+				if( COMPARE( iRandom, 0, 5000) )	iRand3 = 20000;	// ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½Æ·ï¿½
+				else								iRand3 = 40000;	// ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ Ç»ï¿½ï¿½ï¿½ï¿½ï¿½Æ·ï¿½
 			}
 		}
 		else if( m_byMaxDamagedNation == ELMORAD )	{
-			iRandom = myrand(0, 10000);					// Á÷¾÷ÀÇ °©¿ÊÀ» °áÁ¤		
+			iRandom = myrand(0, 10000);					// ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½		
 			if( COMPARE( iRandom, 0, 3300) )	{		
 				iRand2 = 0;	
-				iItemKey = myrand(0, 10000);			// Àü»ç°©¿ÊÀº ¸ðµç Á¾Á·ÀÌ °¡Áü
+				iItemKey = myrand(0, 10000);			// ï¿½ï¿½ï¿½ç°©ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½
 				if( COMPARE( iItemKey, 0, 3333) )			iRand3 = 110000;
 				else if( COMPARE( iItemKey, 3333, 6666) )	iRand3 = 120000;
 				else if( COMPARE( iItemKey, 6666, 10001) )	iRand3 = 130000;
 			}
 			else if( COMPARE( iRandom, 3300, 5600) )	{
 				iRand2 = 40000000;
-				iItemKey = myrand(0, 10000);			// ·Î±×°©¿ÊÀº ³²ÀÚ¿Í ¿©ÀÚ¸¸ °¡Áü
+				iItemKey = myrand(0, 10000);			// ï¿½Î±×°ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½Ú¿ï¿½ ï¿½ï¿½ï¿½Ú¸ï¿½ ï¿½ï¿½ï¿½ï¿½
 				if( COMPARE( iItemKey, 0, 5000) )	iRand3 = 120000;
 				else								iRand3 = 130000;
 			}
 			else if( COMPARE( iRandom, 5600, 7800) )	{
 				iRand2 = 60000000;
-				iItemKey = myrand(0, 10000);			// ¸¶¹ý»ç°©¿ÊÀº ³²ÀÚ¿Í ¿©ÀÚ¸¸ °¡Áü
+				iItemKey = myrand(0, 10000);			// ï¿½ï¿½ï¿½ï¿½ï¿½ç°©ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½Ú¿ï¿½ ï¿½ï¿½ï¿½Ú¸ï¿½ ï¿½ï¿½ï¿½ï¿½
 				if( COMPARE( iItemKey, 0, 5000) )	iRand3 = 120000;
 				else								iRand3 = 130000;
 			}
 			else if( COMPARE( iRandom, 7800, 10001) )	{
 				iRand2 = 80000000;
-				iItemKey = myrand(0, 10000);			// »çÁ¦°©¿ÊÀº ³²ÀÚ¿Í ¿©ÀÚ¸¸ °¡Áü
+				iItemKey = myrand(0, 10000);			// ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½Ú¿ï¿½ ï¿½ï¿½ï¿½Ú¸ï¿½ ï¿½ï¿½ï¿½ï¿½
 				if( COMPARE( iItemKey, 0, 5000) )	iRand3 = 120000;
 				else								iRand3 = 130000;
 			}
 
 		}
 
-		iTemp2 = myrand(0, 10000);					// ¸öÀÇ ºÎÀ§ ¾ÆÀÌÅÛ °áÁ¤
+		iTemp2 = myrand(0, 10000);					// ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½
 		if( COMPARE( iTemp2, 0, 2000) )				iRand4 = 1000;
 		else if( COMPARE( iTemp2, 2000, 4000) )		iRand4 = 2000;
 		else if( COMPARE( iTemp2, 4000, 6000) )		iRand4 = 3000;
 		else if( COMPARE( iTemp2, 6000, 8000) )		iRand4 = 4000;
 		else if( COMPARE( iTemp2, 8000, 10001) )	iRand4 = 5000;
-		iRandom = GetItemCodeNumber(iItemLevel, 2);				// ·¹ÀÌ¸ÅÁ÷Ç¥ Àû¿ë
-		if(iRandom == -1)	{		// Àß¸øµÈ ¾ÆÀÌÅÛ »ý¼º½ÇÆÐ
+		iRandom = GetItemCodeNumber(iItemLevel, 2);				// ï¿½ï¿½ï¿½Ì¸ï¿½ï¿½ï¿½Ç¥ ï¿½ï¿½ï¿½ï¿½
+		if(iRandom == -1)	{		// ï¿½ß¸ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
 			return 0;
 		}
 		iRand5 = iRandom * 10;
-		iItemNumber = iDefault + iRand2 + iItemCode + iRand3 + iRand4 + iRand5 + iItemGrade;	// iItemGrade : ¾ÆÀÌÅÛ µî±Þ»ý¼ºÇ¥ Àû¿ë
+		iItemNumber = iDefault + iRand2 + iItemCode + iRand3 + iRand4 + iRand5 + iItemGrade;	// iItemGrade : ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½Þ»ï¿½ï¿½ï¿½Ç¥ ï¿½ï¿½ï¿½ï¿½
 		//TRACE("ItemProdution : Defensive Success item_number = %d, default=%d, iRand2=%d, itemcode=%d, iRand3=%d, iRand4=%d, iRand5, iItemGrade=%d\n", iItemNumber, iDefault, iRand2, iItemCode, iRand3, iRand4, iRand5, iItemGrade);
 	}
-	else if( COMPARE( iRandom, 8001, 10001) )	{       // ¾Ç¼¼»ç¸® ¾ÆÀÌÅÛ
+	else if( COMPARE( iRandom, 8001, 10001) )	{       // ï¿½Ç¼ï¿½ï¿½ç¸® ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
 		iDefault = 300000000;
-		iRandom = myrand(0, 10000);					// ¾Ç¼¼»ç¸® Á¾·ù°áÁ¤(±Í°í¸®, ¸ñ°ÉÀÌ, ¹ÝÁö, º§Æ®)
+		iRandom = myrand(0, 10000);					// ï¿½Ç¼ï¿½ï¿½ç¸® ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½(ï¿½Í°ï¿½ï¿½ï¿½, ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½, ï¿½ï¿½ï¿½ï¿½, ï¿½ï¿½Æ®)
 		if( COMPARE( iRandom, 0, 2500) )			iRand2 = 10000000;
 		else if( COMPARE( iRandom, 2500, 5000) )	iRand2 = 20000000;
 		else if( COMPARE( iRandom, 5000, 7500) )	iRand2 = 30000000;
 		else if( COMPARE( iRandom, 7500, 10001) )	iRand2 = 40000000;
-		iRand3 = myrand(1, 10000);					// Á¾Á·(¿¤¸ð¶óµå, Ä«·ç½º)
+		iRand3 = myrand(1, 10000);					// ï¿½ï¿½ï¿½ï¿½(ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½, Ä«ï¿½ç½º)
 		if( COMPARE( iRand3, 1, 5000) )	iRand3 = 110000;
 		else	iRand3 = 150000;
-		iRandom = GetItemCodeNumber(iItemLevel, 3);	// ·¹ÀÌ¸ÅÁ÷Ç¥ Àû¿ë
+		iRandom = GetItemCodeNumber(iItemLevel, 3);	// ï¿½ï¿½ï¿½Ì¸ï¿½ï¿½ï¿½Ç¥ ï¿½ï¿½ï¿½ï¿½
 		//TRACE("ItemProdution : GetItemCodeNumber() = %d\n", iRandom);
-		if(iRandom == -1)	{		// Àß¸øµÈ ¾ÆÀÌÅÛ »ý¼º½ÇÆÐ
+		if(iRandom == -1)	{		// ï¿½ß¸ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
 			return 0;
 		}
 		iRand4 = iRandom * 10;
