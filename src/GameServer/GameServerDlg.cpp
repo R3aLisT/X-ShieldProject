@@ -304,6 +304,7 @@ void CGameServerDlg::GetTimeFromIni()
 
 	pTempleEvent.isActive = false;
 	pTempleEvent.ActiveEvent = -1;
+	pTempleEvent.isAttackable = false;
 	pTempleEvent.StartTime = 0;
 	pTempleEvent.AllUserCount = 0;
 	pTempleEvent.KarusUserCount = 0;
@@ -509,7 +510,7 @@ Unit * CGameServerDlg::GetUnitPtr(uint16 id)
 * @param	sCount	  	Number of spawns to create.
 * @param	sRadius	  	Spawn radius.
 */
-void CGameServerDlg::SpawnEventNpc(uint16 sSid, bool bIsMonster, uint8 byZone, float fX, float fY, float fZ, uint16 sCount /*= 1*/, uint16 sRadius /*= 0*/, uint16 sDuration /*= 0*/, uint8 nation /*= 0*/,int16 socketID /*= -1*/, int16 nEventRoom)
+void CGameServerDlg::SpawnEventNpc(uint16 sSid, bool bIsMonster, uint8 byZone, float fX, float fY, float fZ, uint16 sCount /*= 1*/, uint16 sRadius /*= 0*/, uint16 sDuration /*= 0*/, uint8 nation /*= 0*/,int16 socketID /*= -1*/, uint16 nEventRoom)
 {
 	Packet result(AG_NPC_SPAWN_REQ);
 	result	<< sSid << bIsMonster 
@@ -761,7 +762,7 @@ void CGameServerDlg::AIServerConnect()
 * @param	nation			   	The nation.
 * @param	seekingPartyOptions	Bitmask of classes to send to.
 */
-void CGameServerDlg::Send_Zone_Matched_Class(Packet *pkt, uint8 bZoneID, CUser* pExceptUser, uint8 nation, uint8 seekingPartyOptions, int16 nEventRoom)
+void CGameServerDlg::Send_Zone_Matched_Class(Packet *pkt, uint8 bZoneID, CUser* pExceptUser, uint8 nation, uint8 seekingPartyOptions, uint16 nEventRoom)
 {
 	SessionMap & sessMap = g_pMain->m_socketMgr.GetActiveSessionMap();
 	foreach (itr, sessMap)
@@ -773,7 +774,7 @@ void CGameServerDlg::Send_Zone_Matched_Class(Packet *pkt, uint8 bZoneID, CUser* 
 			|| pUser->isInParty()) // looking for users to join the party
 			continue;
 
-		if (nEventRoom != pUser->GetEventRoom())
+		if (nEventRoom > 0 && nEventRoom != pUser->GetEventRoom())
 			continue;
 
 		// If we're in the neutral zone (Moradon), it doesn't matter which nation we party with.
@@ -801,7 +802,7 @@ void CGameServerDlg::Send_Zone_Matched_Class(Packet *pkt, uint8 bZoneID, CUser* 
 * @param	nation	   	Nation to allow. If unspecified, will default to Nation::ALL 
 * 						which will send to all/both nations.
 */
-void CGameServerDlg::Send_Zone(Packet *pkt, uint8 bZoneID, CUser* pExceptUser /*= nullptr*/, uint8 nation /*= 0*/, int16 nEventRoom)
+void CGameServerDlg::Send_Zone(Packet *pkt, uint8 bZoneID, CUser* pExceptUser /*= nullptr*/, uint8 nation /*= 0*/, uint16 nEventRoom)
 {
 	SessionMap & sessMap = g_pMain->m_socketMgr.GetActiveSessionMap();
 	foreach (itr, sessMap)
@@ -819,7 +820,7 @@ void CGameServerDlg::Send_Zone(Packet *pkt, uint8 bZoneID, CUser* pExceptUser /*
 			continue;
 		}
 
-		if (nEventRoom != pUser->GetEventRoom())
+		if (nEventRoom > 0 && nEventRoom != pUser->GetEventRoom())
 			continue;
 
 		pUser->Send(pkt);
@@ -835,7 +836,7 @@ void CGameServerDlg::Send_Zone(Packet *pkt, uint8 bZoneID, CUser* pExceptUser /*
 * @param	nation	   	Nation to allow. If unspecified, will default to Nation::ALL 
 * 						which will send to all/both nations.
 */
-void CGameServerDlg::Send_All(Packet *pkt, CUser* pExceptUser /*= nullptr*/, uint8 nation /*= 0*/, uint8 ZoneID /*= 0*/, int16 nEventRoom /*= -1*/)
+void CGameServerDlg::Send_All(Packet *pkt, CUser* pExceptUser /*= nullptr*/, uint8 nation /*= 0*/, uint8 ZoneID /*= 0*/, uint16 nEventRoom /*= -1*/)
 {
 	SessionMap & sessMap = g_pMain->m_socketMgr.GetActiveSessionMap();
 	foreach (itr, sessMap)
@@ -850,7 +851,7 @@ void CGameServerDlg::Send_All(Packet *pkt, CUser* pExceptUser /*= nullptr*/, uin
 			if (pUser->GetZoneID() != ZoneID) 
 				continue;
 
-		if (nEventRoom != pUser->GetEventRoom())
+		if (nEventRoom > 0 && nEventRoom != pUser->GetEventRoom())
 			continue;
 
 		pUser->Send(pkt);
@@ -858,13 +859,13 @@ void CGameServerDlg::Send_All(Packet *pkt, CUser* pExceptUser /*= nullptr*/, uin
 	g_pMain->m_socketMgr.ReleaseLock();
 }
 
-void CGameServerDlg::Send_Region(Packet *pkt, C3DMap *pMap, int x, int z, CUser* pExceptUser, int16 nEventRoom)
+void CGameServerDlg::Send_Region(Packet *pkt, C3DMap *pMap, int x, int z, CUser* pExceptUser, uint16 nEventRoom)
 {
 	foreach_region(rx, rz)
 		Send_UnitRegion(pkt, pMap, rx + x, rz + z, pExceptUser, nEventRoom);
 }
 
-void CGameServerDlg::Send_UnitRegion(Packet *pkt, C3DMap *pMap, int x, int z, CUser *pExceptUser, int16 nEventRoom)
+void CGameServerDlg::Send_UnitRegion(Packet *pkt, C3DMap *pMap, int x, int z, CUser *pExceptUser, uint16 nEventRoom)
 {
 	if (pMap == nullptr)
 		return;
@@ -883,7 +884,7 @@ void CGameServerDlg::Send_UnitRegion(Packet *pkt, C3DMap *pMap, int x, int z, CU
 			|| !pUser->isInGame())
 			continue;
 
-		if (nEventRoom != pUser->GetEventRoom())
+		if (nEventRoom > 0 && nEventRoom != pUser->GetEventRoom())
 			continue;
 
 		pUser->Send(pkt);
@@ -891,7 +892,7 @@ void CGameServerDlg::Send_UnitRegion(Packet *pkt, C3DMap *pMap, int x, int z, CU
 }
 
 // TODO: Move the following two methods into a base CUser/CNpc class
-void CGameServerDlg::Send_OldRegions(Packet *pkt, int old_x, int old_z, C3DMap *pMap, int x, int z, CUser* pExceptUser, int16 nEventRoom)
+void CGameServerDlg::Send_OldRegions(Packet *pkt, int old_x, int old_z, C3DMap *pMap, int x, int z, CUser* pExceptUser, uint16 nEventRoom)
 {
 	if (old_x != 0)
 	{
@@ -915,7 +916,7 @@ void CGameServerDlg::Send_OldRegions(Packet *pkt, int old_x, int old_z, C3DMap *
 	}
 }
 
-void CGameServerDlg::Send_NewRegions(Packet *pkt, int new_x, int new_z, C3DMap *pMap, int x, int z, CUser* pExceptUser, int16 nEventRoom)
+void CGameServerDlg::Send_NewRegions(Packet *pkt, int new_x, int new_z, C3DMap *pMap, int x, int z, CUser* pExceptUser, uint16 nEventRoom)
 {
 	if (new_x != 0)
 	{
@@ -940,7 +941,7 @@ void CGameServerDlg::Send_NewRegions(Packet *pkt, int new_x, int new_z, C3DMap *
 	}
 }
 
-void CGameServerDlg::Send_NearRegion(Packet *pkt, C3DMap *pMap, int region_x, int region_z, float curx, float curz, CUser* pExceptUser, int16 nEventRoom)
+void CGameServerDlg::Send_NearRegion(Packet *pkt, C3DMap *pMap, int region_x, int region_z, float curx, float curz, CUser* pExceptUser, uint16 nEventRoom)
 {
 	int left_border = region_x * VIEW_DISTANCE, top_border = region_z * VIEW_DISTANCE;
 	Send_FilterUnitRegion(pkt, pMap, region_x, region_z, curx, curz, pExceptUser, nEventRoom);
@@ -970,7 +971,7 @@ void CGameServerDlg::Send_NearRegion(Packet *pkt, C3DMap *pMap, int region_x, in
 	}
 }
 
-void CGameServerDlg::Send_FilterUnitRegion(Packet *pkt, C3DMap *pMap, int x, int z, float ref_x, float ref_z, CUser *pExceptUser, int16 nEventRoom)
+void CGameServerDlg::Send_FilterUnitRegion(Packet *pkt, C3DMap *pMap, int x, int z, float ref_x, float ref_z, CUser *pExceptUser, uint16 nEventRoom)
 {
 	if (pMap == nullptr)
 		return;
@@ -989,7 +990,7 @@ void CGameServerDlg::Send_FilterUnitRegion(Packet *pkt, C3DMap *pMap, int x, int
 			|| !pUser->isInGame())
 			continue;
 
-		if (nEventRoom != pUser->GetEventRoom())
+		if (nEventRoom > 0 && nEventRoom != pUser->GetEventRoom())
 			continue;
 
 		if (sqrt(pow((pUser->m_curx - ref_x), 2) + pow((pUser->m_curz - ref_z), 2)) < 32)
@@ -1255,7 +1256,7 @@ void CGameServerDlg::RegionUserInOutForMe(CUser *pSendUser)
 	pSendUser->SendCompressed(&result);
 }
 
-void CGameServerDlg::GetRegionUserIn(C3DMap *pMap, uint16 region_x, uint16 region_z, Packet & pkt, uint16 & t_count, int16 nEventRoom)
+void CGameServerDlg::GetRegionUserIn(C3DMap *pMap, uint16 region_x, uint16 region_z, Packet & pkt, uint16 & t_count, uint16 nEventRoom)
 {
 	if (pMap == nullptr)
 		return;
@@ -1273,7 +1274,7 @@ void CGameServerDlg::GetRegionUserIn(C3DMap *pMap, uint16 region_x, uint16 regio
 			|| !pUser->isInGame())
 			continue;
 
-		if (nEventRoom != pUser->GetEventRoom())
+		if (nEventRoom > 0 && nEventRoom != pUser->GetEventRoom())
 			continue;
 
 		pkt << uint8(0) << pUser->GetSocketID();
@@ -1282,7 +1283,7 @@ void CGameServerDlg::GetRegionUserIn(C3DMap *pMap, uint16 region_x, uint16 regio
 	}
 }
 
-void CGameServerDlg::GetRegionUserList(C3DMap* pMap, uint16 region_x, uint16 region_z, Packet & pkt, uint16 & t_count, int16 nEventRoom)
+void CGameServerDlg::GetRegionUserList(C3DMap* pMap, uint16 region_x, uint16 region_z, Packet & pkt, uint16 & t_count, uint16 nEventRoom)
 {
 	if (pMap == nullptr)
 		return;
@@ -1300,7 +1301,7 @@ void CGameServerDlg::GetRegionUserList(C3DMap* pMap, uint16 region_x, uint16 reg
 			|| !pUser->isInGame())
 			continue;
 
-		if (nEventRoom != pUser->GetEventRoom())
+		if (nEventRoom > 0 && nEventRoom != pUser->GetEventRoom())
 			continue;
 
 		pkt << pUser->GetSocketID();
@@ -1328,7 +1329,7 @@ void CGameServerDlg::MerchantUserInOutForMe(CUser *pSendUser)
 	pSendUser->SendCompressed(&result);
 }
 
-void CGameServerDlg::GetRegionMerchantUserIn(C3DMap *pMap, uint16 region_x, uint16 region_z, Packet & pkt, uint16 & t_count, int16 nEventRoom)
+void CGameServerDlg::GetRegionMerchantUserIn(C3DMap *pMap, uint16 region_x, uint16 region_z, Packet & pkt, uint16 & t_count, uint16 nEventRoom)
 {
 	if (pMap == nullptr)
 		return;
@@ -1347,7 +1348,7 @@ void CGameServerDlg::GetRegionMerchantUserIn(C3DMap *pMap, uint16 region_x, uint
 			|| !pUser->isMerchanting())
 			continue;
 
-		if (nEventRoom != pUser->GetEventRoom())
+		if (nEventRoom > 0 && nEventRoom != pUser->GetEventRoom())
 			continue;
 
 		pkt << pUser->GetSocketID()
@@ -1380,7 +1381,7 @@ void CGameServerDlg::NpcInOutForMe(CUser* pSendUser)
 	pSendUser->SendCompressed(&result);
 }
 
-void CGameServerDlg::GetRegionNpcIn(C3DMap *pMap, uint16 region_x, uint16 region_z, Packet & pkt, uint16 & t_count, int16 nEventRoom)
+void CGameServerDlg::GetRegionNpcIn(C3DMap *pMap, uint16 region_x, uint16 region_z, Packet & pkt, uint16 & t_count, uint16 nEventRoom)
 {
 	if (!m_bPointCheckFlag
 		|| pMap == nullptr)
@@ -1399,7 +1400,7 @@ void CGameServerDlg::GetRegionNpcIn(C3DMap *pMap, uint16 region_x, uint16 region
 			|| pNpc->isDead())
 			continue;
 
-		if (nEventRoom != pNpc->GetEventRoom())
+		if (nEventRoom > 0 && nEventRoom != pNpc->GetEventRoom())
 			continue;
 
 		pkt << pNpc->GetID();
@@ -1457,7 +1458,7 @@ void CGameServerDlg::GetUnitListFromSurroundingRegions(Unit * pOwner, std::vecto
 	}
 }
 
-void CGameServerDlg::GetRegionNpcList(C3DMap *pMap, uint16 region_x, uint16 region_z, Packet & pkt, uint16 & t_count, int16 nEventRoom)
+void CGameServerDlg::GetRegionNpcList(C3DMap *pMap, uint16 region_x, uint16 region_z, Packet & pkt, uint16 & t_count, uint16 nEventRoom)
 {
 	if (!m_bPointCheckFlag
 		|| pMap == nullptr)
@@ -1475,7 +1476,7 @@ void CGameServerDlg::GetRegionNpcList(C3DMap *pMap, uint16 region_x, uint16 regi
 		if (pNpc == nullptr || pNpc->isDead())
 			continue;
 
-		if (nEventRoom != pNpc->GetEventRoom())
+		if (nEventRoom > 0 && nEventRoom != pNpc->GetEventRoom())
 			continue;
 
 		pkt << pNpc->GetID();
@@ -2043,30 +2044,14 @@ void CGameServerDlg::TempleEventTimer()
 			TempleEventTeleportUsers();
 			break;
 		} 
-	}
-
-	for(int i = 0; i < CHAOS_EVENT_COUNT; i++)
-	{
-		if (nHour == m_nChaosTime[i] 
-		&& nMinute == 0 
-			&& pTempleEvent.ActiveEvent != TEMPLE_EVENT_CHAOS)
-		{
-			pTempleEvent.ActiveEvent = TEMPLE_EVENT_CHAOS;
-			m_nTempleEventRemainSeconds = 600;
-			TempleEventStart();
-			break;
-		}  
 		else if (nHour == m_nChaosTime[i]
-		&& nMinute == 11 
+		&& nMinute == 12 
 			&& pTempleEvent.ActiveEvent == TEMPLE_EVENT_CHAOS
 			&& pTempleEvent.isActive) {
-				TempleEventCreateRooms();
-				m_nTempleEventRemainSeconds = 0;
-				TempleEventStart();
-				TempleEventTeleportUsers();
+				pTempleEvent.isAttackable = true;
 				break;
 		}
-	}
+ 	}
 }
 
 void CGameServerDlg::TempleEventStart()
@@ -2127,12 +2112,15 @@ void CGameServerDlg::TempleEventTeleportUsers()
 	{
 	case TEMPLE_EVENT_BORDER_DEFENCE_WAR:
 		ZoneID = ZONE_BORDER_DEFENSE_WAR;
+		pTempleEvent.isAttackable = true;
 		break;
 	case TEMPLE_EVENT_CHAOS:
 		ZoneID = ZONE_CHAOS_DUNGEON;
+		pTempleEvent.isAttackable = false;
 		break;
 	case TEMPLE_EVENT_JURAD_MOUNTAIN:
 		ZoneID = ZONE_JURAD_MOUNTAIN;
+		pTempleEvent.isAttackable = true;
 		break;
 	}
 
@@ -2155,34 +2143,25 @@ void CGameServerDlg::TempleEventTeleportUsers()
 		if (ZoneID == ZONE_CHAOS_DUNGEON)
 			pUser->RobItem(CHAOS_MAP,1);
 
-		if (pUser->GetNation() == KARUS)
-		{
-			pUser->ZoneChange(ZoneID, 
-				(float)pStartPosition->sKarusZ + myrand(0, pStartPosition->bRangeX), 
-				(float)pStartPosition->sKarusX + myrand(0, pStartPosition->bRangeZ));
-		}
-		else
-		{
-			pUser->ZoneChange(ZoneID, 
-				(float)pStartPosition->sElmoradX + myrand(0, pStartPosition->bRangeX), 
-				(float)pStartPosition->sElmoradZ + myrand(0, pStartPosition->bRangeZ));
-		}
-	}
+		pUser->ZoneChange(ZoneID, 
+			(float)(pUser->GetNation() == KARUS ? pStartPosition->sKarusX : pStartPosition->sElmoradX + myrand(0, pStartPosition->bRangeX)), 
+			(float)(pUser->GetNation() == KARUS ? pStartPosition->sKarusZ : pStartPosition->sElmoradZ + myrand(0, pStartPosition->bRangeZ)));
 
-	m_nTempleEventFinishRemainSeconds = 300; // 20 minute is both
+	m_nTempleEventFinishRemainSeconds = 1200; // 20 minute is both
 	pTempleEvent.isActive = true;
+	}
 }
 
-void CGameServerDlg::TempleEventFinish()
-{
-	uint8 ZoneID = 0;
-
-	switch (pTempleEvent.ActiveEvent)
-	{
-	case TEMPLE_EVENT_BORDER_DEFENCE_WAR:
-		ZoneID = ZONE_BORDER_DEFENSE_WAR;
-		SendItemZoneUsers(ZoneID, CERTIFICATE_OF_VICTORY); // winner reward...
-		SendItemZoneUsers(ZoneID, BORDER_SECURITY_SCROLL);  // winner reward...
+ void CGameServerDlg::TempleEventFinish()
+ {
+ 	uint8 ZoneID = 0;
+ 
+ 	switch (pTempleEvent.ActiveEvent)
+ 	{
+ 	case TEMPLE_EVENT_BORDER_DEFENCE_WAR:
+ 		ZoneID = ZONE_BORDER_DEFENSE_WAR;
+ 		SendItemZoneUsers(ZoneID, CERTIFICATE_OF_VICTORY); // winner reward...
+ 		SendItemZoneUsers(ZoneID, BORDER_SECURITY_SCROLL);  // winner reward...
 		SendItemZoneUsers(ZoneID, RED_TREASURE_CHEST);
 		break;
 	case TEMPLE_EVENT_CHAOS:
@@ -2211,11 +2190,11 @@ void CGameServerDlg::TempleEventFinish()
 			||	!pUser->isInGame())
 			continue;
 
-		g_pMain->UpdateEventUser(pUser, 0);
+		g_pMain->UpdateEventUser(pUser, -1);
 
 		_USER_RANKING * pRankInfo = m_UserRankingArray->GetData(itr->second->m_socketID);
 
-		if (pRankInfo != nullptr)
+		if (pRankInfo)
 		{
 			int64 nChangeExp = -1;
 
@@ -2255,7 +2234,8 @@ void CGameServerDlg::TempleEventSendActiveEventTime(CUser *pUser)
 
 void CGameServerDlg::TempleEventKickOutUser(CUser *pUser)
 {
-	if (pUser == nullptr || !pUser->isInGame())
+	if (pUser == nullptr 
+		|| !pUser->isInGame())
 		return;
 
 	uint8 nZoneID = 0;
@@ -2266,9 +2246,9 @@ void CGameServerDlg::TempleEventKickOutUser(CUser *pUser)
 	{
 		if (pUser->GetLevel() <  35)
 			nZoneID = ZONE_MORADON;
-		else if (pUser->GetLevel() >=  35 && pUser->GetLevel() <=59)
+		else if (pUser->GetLevel() >= 35 && pUser->GetLevel() <=59)
 			nZoneID = ZONE_ARDREAM;
-		else if (pUser->GetLevel() >=  60 && pUser->GetLevel() <=69)
+		else if (pUser->GetLevel() >= 60 && pUser->GetLevel() <=69)
 			nZoneID = ZONE_RONARK_LAND_BASE;
 		else if (pUser->GetLevel() >=  70)
 			nZoneID = ZONE_RONARK_LAND;

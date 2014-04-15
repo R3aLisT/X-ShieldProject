@@ -1200,6 +1200,10 @@ bool CUser::isHostileTo(Unit * pTarget)
 		&& isInPVPZone())
 		return true;
 
+	// Players can attack opposing nation players when they're in EVENT zones.
+	if (isInTempleEventZone())
+	return true;
+
 	// Players cannot attack other players in any other circumstance.
 	return false;
 }

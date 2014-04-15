@@ -12,6 +12,7 @@
 #include "../shared/database/MagicType1Set.h"
 #include "../shared/database/MagicType2Set.h"
 #include "../shared/database/MagicType4Set.h"
+#include "../shared/database/ObjectPosSet.h"
 #include "../shared/database/NpcPosSet.h"
 #include "../shared/database/ZoneInfoSet.h"
 #include "../shared/database/NpcItemSet.h"
@@ -95,6 +96,7 @@ bool CServerDlg::Startup()
 		|| !GetMakeGradeItemTableData()
 		|| !GetMakeLareItemTableData()
 		|| !GetServerResourceTable()
+		|| !GetObjectPostTableData()
 		|| !GetNpcTableData(false)
 		|| !GetNpcTableData(true)
 		// Load maps
@@ -164,6 +166,12 @@ bool CServerDlg::GetMakeItemGroupTable()
 {
 	LOAD_TABLE(CMakeItemGroupSet, &m_GameDB, &m_MakeItemGroupArray, false);
 }
+
+bool CServerDlg::GetObjectPostTableData()
+{
+	LOAD_TABLE(CObjectPosSet, &m_GameDB, &m_ObjectEventArray, false);
+}
+
 
 bool CServerDlg::GetNpcTableData(bool bNpcData /*= true*/)
 {
@@ -719,7 +727,7 @@ bool CServerDlg::AddObjectEventNpc(_OBJECT_EVENT* pEvent, MAP * pMap)
 	return true;
 }
 
-CNpc * CServerDlg::SpawnEventNpc(uint16 sSid, bool bIsMonster, uint8 byZone, float fX, float fY, float fZ, uint16 sDuration, uint8 nation, int16 socketID, int16 nEventRoom)
+CNpc * CServerDlg::SpawnEventNpc(uint16 sSid, bool bIsMonster, uint8 byZone, float fX, float fY, float fZ, uint16 sDuration, uint8 nation, int16 socketID, uint16 nEventRoom)
 {
 	CNpcTable * proto = nullptr;
 	MAP * pZone = GetZoneByID(byZone);

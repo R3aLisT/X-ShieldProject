@@ -632,7 +632,7 @@ struct _PREMIUM_ITEM_EXP
 struct _USER_RANKING 
 {
 	uint16 m_socketID;
-	int16 m_bEventRoom;
+	uint16 m_bEventRoom;
 	uint16 m_bZone;
 	uint8 m_bNation;
 	uint32 m_iLoyaltyDaily;

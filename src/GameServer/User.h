@@ -892,9 +892,6 @@ public:
 
 	bool isEventUser();
 
-	void AddEventUser(CUser * pUser = nullptr);
-	bool isEventUser(uint16 m_socketID);
-
 	void SendTargetHP( uint8 echo, int tid, int damage = 0 );
 	bool IsValidSlotPos( _ITEM_TABLE* pTable, int destpos );
 	void SetUserAbility(bool bSendPacket = true);
@@ -926,8 +923,8 @@ public:
 	void ChangeFame(uint8 bFame);
 	void SendServerIndex();
 
-	void SendToRegion(Packet *pkt, CUser *pExceptUser = nullptr, int16 nEventRoom = 0);
-	void SendToZone(Packet *pkt, CUser *pExceptUser = nullptr, int16 nEventRoom = 0);
+	void SendToRegion(Packet *pkt, CUser *pExceptUser = nullptr, uint16 nEventRoom = 0);
+	void SendToZone(Packet *pkt, CUser *pExceptUser = nullptr, uint16 nEventRoom = 0);
 
 	virtual void OnDeath(Unit *pKiller);
 	void UpdateAngerGauge(uint8 byAngerGauge);

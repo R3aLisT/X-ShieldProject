@@ -126,11 +126,11 @@ public:
 	void TempleEventGetActiveEventTime(CUser *pUser);
 	void TempleEventSendActiveEventTime(CUser *pUser);
 	void TempleEventKickOutUser(CUser *pUser);
-	void TempleEventReset();
-	void TempleEventCreateRooms();
 	void AddEventUser(CUser * pUser);
 	void RemoveEventUser(CUser * pUser);
 	void UpdateEventUser(CUser * pUser, uint16 nEventRoom = 0);
+	void TempleEventReset();
+	void TempleEventCreateRooms();
 	void SetEventUser(CUser *pUser);
 	std::string GetBattleAndNationMonumentName(int16 TrapNumber = -1, uint8 ZoneID = 0);
 	void CheckNationMonumentRewards();
@@ -141,10 +141,10 @@ public:
 	void NpcInOutForMe(CUser* pSendUser);
 
 	// Get info for NPCs in region
-	void GetRegionNpcIn(C3DMap* pMap, uint16 region_x, uint16 region_z, Packet & pkt, uint16 & t_count, int16 nEventRoom = 0);
+	void GetRegionNpcIn(C3DMap* pMap, uint16 region_x, uint16 region_z, Packet & pkt, uint16 & t_count, uint16 nEventRoom = 0);
 
 	// Get list of NPC IDs in region
-	void GetRegionNpcList(C3DMap* pMap, uint16 region_x, uint16 region_z, Packet & pkt, uint16 & t_count, int16 nEventRoom = 0);
+	void GetRegionNpcList(C3DMap* pMap, uint16 region_x, uint16 region_z, Packet & pkt, uint16 & t_count, uint16 nEventRoom = 0);
 
 	// Get list of NPCs for regions around user (WIZ_NPC_REGION)
 	void RegionNpcInfoForMe(CUser* pSendUser);	
@@ -156,10 +156,10 @@ public:
 	void UserInOutForMe(CUser* pSendUser);
 
 	// Get info for users in region
-	void GetRegionUserIn(C3DMap* pMap, uint16 region_x, uint16 region_z, Packet & pkt, uint16 & t_count, int16 nEventRoom = 0);
+	void GetRegionUserIn(C3DMap* pMap, uint16 region_x, uint16 region_z, Packet & pkt, uint16 & t_count, uint16 nEventRoom = 0);
 
 	// Get list of user IDs in region
-	void GetRegionUserList(C3DMap* pMap, uint16 region_x, uint16 region_z, Packet & pkt, uint16 & t_count, int16 nEventRoom = 0);
+	void GetRegionUserList(C3DMap* pMap, uint16 region_x, uint16 region_z, Packet & pkt, uint16 & t_count, uint16 nEventRoom = 0);
 
 	// Get list of users for regions around user (WIZ_REGIONCHANGE)
 	void RegionUserInOutForMe(CUser* pSendUser);
@@ -171,7 +171,7 @@ public:
 	INLINE bool isWarOpen() { return m_byBattleOpen != NO_BATTLE;} 
 
 	// Get list of merchants in region
-	void GetRegionMerchantUserIn(C3DMap* pMap, uint16 region_x, uint16 region_z, Packet & pkt, uint16 & t_count, int16 nEventRoom = 0);
+	void GetRegionMerchantUserIn(C3DMap* pMap, uint16 region_x, uint16 region_z, Packet & pkt, uint16 & t_count, uint16 nEventRoom = 0);
 
 	void SendHelpDescription(CUser *pUser, std::string sHelpMessage);
 
@@ -264,18 +264,19 @@ public:
 
 	void SendFormattedResource(uint32 nResourceID, uint8 byNation = Nation::ALL, bool bIsNotice = true, ...);
 
-	void Send_Region(Packet *pkt, C3DMap *pMap, int x, int z, CUser* pExceptUser = nullptr, int16 nEventRoom = 0);
-	void Send_UnitRegion(Packet *pkt, C3DMap *pMap, int x, int z, CUser* pExceptUser = nullptr, int16 nEventRoom = 0);
-	void Send_OldRegions(Packet *pkt, int old_x, int old_z, C3DMap *pMap, int x, int z, CUser* pExceptUser = nullptr, int16 nEventRoom = 0);
-	void Send_NewRegions(Packet *pkt, int new_x, int new_z, C3DMap *pMap, int x, int z, CUser* pExceptUser = nullptr, int16 nEventRoom = 0);
+	void Send_Region(Packet *pkt, C3DMap *pMap, int x, int z, CUser* pExceptUser = nullptr, uint16 nEventRoom = 0);
+	void Send_UnitRegion(Packet *pkt, C3DMap *pMap, int x, int z, CUser* pExceptUser = nullptr, uint16 nEventRoom = 0);
+	void Send_OldRegions(Packet *pkt, int old_x, int old_z, C3DMap *pMap, int x, int z, CUser* pExceptUser = nullptr, uint16 nEventRoom = 0);
+	void Send_NewRegions(Packet *pkt, int new_x, int new_z, C3DMap *pMap, int x, int z, CUser* pExceptUser = nullptr, uint16 nEventRoom = 0);
 
-	void Send_NearRegion(Packet *pkt, C3DMap *pMap, int region_x, int region_z, float curx, float curz, CUser* pExceptUser=nullptr, int16 nEventRoom = 0);
-	void Send_FilterUnitRegion(Packet *pkt, C3DMap *pMap, int x, int z, float ref_x, float ref_z, CUser* pExceptUser=nullptr, int16 nEventRoom = 0);
+	void Send_NearRegion(Packet *pkt, C3DMap *pMap, int region_x, int region_z, float curx, float curz, CUser* pExceptUser=nullptr, uint16 nEventRoom = 0);
+	void Send_FilterUnitRegion(Packet *pkt, C3DMap *pMap, int x, int z, float ref_x, float ref_z, CUser* pExceptUser=nullptr, uint16 nEventRoom = 0);
 
-	void Send_Zone_Matched_Class(Packet *pkt, uint8 bZoneID, CUser* pExceptUser, uint8 nation, uint8 seekingPartyOptions, int16 nEventRoom = 0);
-	void Send_Zone(Packet *pkt, uint8 bZoneID, CUser* pExceptUser = nullptr, uint8 nation = 0, int16 nEventRoom = 0);
 
-	void Send_All(Packet *pkt, CUser* pExceptUser = nullptr, uint8 nation = 0, uint8 ZoneID = 0, int16 nEventRoom = 0);
+    void Send_Zone_Matched_Class(Packet *pkt, uint8 bZoneID, CUser* pExceptUser, uint8 nation, uint8 seekingPartyOptions, uint16 nEventRoom = 0);
+	void Send_Zone(Packet *pkt, uint8 bZoneID, CUser* pExceptUser = nullptr, uint8 nation = 0, uint16 nEventRoom = 0);
+
+	void Send_All(Packet *pkt, CUser* pExceptUser = nullptr, uint8 nation = 0, uint8 ZoneID = 0, uint16 nEventRoom = 0);
 	void Send_AIServer(Packet *pkt);
 
 	void GetServerResource(int nResourceID, std::string * result, ...);
@@ -291,7 +292,7 @@ public:
 	Unit * GetUnitPtr(uint16 id);
 
 	// Spawns an event NPC/monster
-	void SpawnEventNpc(uint16 sSid, bool bIsMonster, uint8 byZone, float fX, float fY, float fZ, uint16 sCount = 1, uint16 sRadius = 0, uint16 sDuration = 0, uint8 nation = 0, int16 socketID = -1, int16 nEventRoom = 0);
+	void SpawnEventNpc(uint16 sSid, bool bIsMonster, uint8 byZone, float fX, float fY, float fZ, uint16 sCount = 1, uint16 sRadius = 0, uint16 sDuration = 0, uint8 nation = 0, int16 socketID = -1, uint16 nEventRoom = 0);
 
 	// Kill a Npc/Monster
 	void KillNpc(uint16 sNid);

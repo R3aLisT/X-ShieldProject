@@ -559,7 +559,7 @@ time_t CNpc::NpcStanding()
 	{
 		m_byGateOpen = !m_byGateOpen;
 		Packet result(AG_NPC_GATE_OPEN);
-		result << GetID() << m_byGateOpen;
+		result << GetID() << GetProtoID() << m_byGateOpen;
 		g_pMain->Send(&result);
 	}
 
@@ -1332,6 +1332,11 @@ bool CNpc::isShowBox()
 
 bool CNpc::FindEnemy()
 {
+	if (GetZoneID() == ZONE_CHAOS_DUNGEON)
+	{
+		bool yeschaos = true;
+	}
+
 	if (isNonAttackingObject())
 		return false;
 
@@ -1398,6 +1403,7 @@ bool CNpc::FindEnemy()
 		if (hasTarget() && (fCompareDis <= fSearchRange))		
 			return true;
 
+		return true;
 		fCompareDis = 0.0f;
 	}
 
@@ -1421,7 +1427,8 @@ bool CNpc::FindEnemy()
 			fCompareDis = FindEnemyExpand(x, y, fCompareDis, UnitNPC);
 		}
 
-		if (hasTarget() && (fCompareDis <= fSearchRange))	return true;
+		if (hasTarget() && (fCompareDis <= fSearchRange))	
+			return true;
 	}
 
 	// 아무도 없으므로 리스트에 관리하는 유저를 초기화한다.

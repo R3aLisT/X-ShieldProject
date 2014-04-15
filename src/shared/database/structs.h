@@ -196,6 +196,8 @@ struct _SERVER_RESOURCE
 #pragma pack(push, 1)
 struct _OBJECT_EVENT
 {
+	int nIndex;
+	uint16 sZoneID;
 	int sBelong;
 	short sIndex;
 	short sType;
@@ -207,6 +209,7 @@ struct _OBJECT_EVENT
 	uint8 byLife;
 };
 
+#pragma pack(push, 1)
 struct _REGENE_EVENT
 {
 	float fRegenePosX;

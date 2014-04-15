@@ -989,7 +989,7 @@ void CUser::SetMaxHp(int iFlag)
 
 	if (GetZoneID() == ZONE_SNOW_BATTLE && iFlag == 0)
 		m_iMaxHp = 100;
-	else if (GetZoneID() == ZONE_CHAOS_DUNGEON)
+	else if (GetZoneID() == ZONE_CHAOS_DUNGEON && iFlag == 0)
 		m_iMaxHp = 10000 / 10;
 	else	
 	{
@@ -1000,8 +1000,10 @@ void CUser::SetMaxHp(int iFlag)
 		if (m_iMaxHp > MAX_PLAYER_HP && !isGM()) 
 			m_iMaxHp = MAX_PLAYER_HP;
 
-		if( iFlag == 1 )	m_sHp = m_iMaxHp;
-		else if( iFlag == 2 )	m_iMaxHp = 100;
+		if( iFlag == 1 )	
+			m_sHp = m_iMaxHp;
+		else if( iFlag == 2 )	
+			m_iMaxHp = 100;
 	}
 
 	if(m_iMaxHp < m_sHp) {
@@ -1782,7 +1784,7 @@ void CUser::HpChange(int amount, Unit *pAttacker /*= nullptr*/, bool bSendToAI /
 		RemoveStealth();
 
 		// Handle the mirroring of damage.
-		if (m_bMirrorDamage && isInParty())
+		if (m_bMirrorDamage && isInParty() && GetZoneID() != ZONE_CHAOS_DUNGEON)
 		{
 			_PARTY_GROUP *pParty = nullptr;
 			CUser *pUser = nullptr;
@@ -1804,7 +1806,7 @@ void CUser::HpChange(int amount, Unit *pAttacker /*= nullptr*/, bool bSendToAI /
 		}
 
 		// Handle mana absorb skills
-		if (m_bManaAbsorb > 0)
+		if (m_bManaAbsorb > 0 && GetZoneID() != ZONE_CHAOS_DUNGEON)
 		{
 			int toBeAbsorbed = 0;
 			toBeAbsorbed = (originalAmount*m_bManaAbsorb) / 100;
@@ -1817,7 +1819,7 @@ void CUser::HpChange(int amount, Unit *pAttacker /*= nullptr*/, bool bSendToAI /
 		}
 
 		// Handle mastery passives
-		if (isMastered())
+		if (isMastered() && GetZoneID() != ZONE_CHAOS_DUNGEON)
 		{
 			// Matchless: [Passive]Decreases all damages received by 15%
 			if (CheckSkillPoint(SkillPointMaster, 10, MAX_LEVEL))
@@ -1845,7 +1847,7 @@ void CUser::HpChange(int amount, Unit *pAttacker /*= nullptr*/, bool bSendToAI /
 
 	if (GetHealth() > 0
 		&& isMastered()
-		&& !isMage())
+		&& !isMage() && GetZoneID() != ZONE_CHAOS_DUNGEON)
 	{
 		const uint16 hp30Percent = (30 * GetMaxHealth()) / 100;
 		if ((oldHP >= hp30Percent && m_sHp < hp30Percent)
@@ -1867,7 +1869,7 @@ void CUser::HpChange(int amount, Unit *pAttacker /*= nullptr*/, bool bSendToAI /
 		Send_AIServer(&result);
 	}
 
-	if (isInParty())
+	if (isInParty() && GetZoneID() != ZONE_CHAOS_DUNGEON)
 		SendPartyHPUpdate();
 
 	// Ensure we send the original damage (prior to passives) amount to the attacker 
@@ -4312,7 +4314,7 @@ void CUser::NativeZoneReturn()
 * @param	pkt		   	The packet.
 * @param	pExceptUser	User to except. If specified, will ignore this user.
 */
-void CUser::SendToRegion(Packet *pkt, CUser *pExceptUser /*= nullptr*/, int16 nEventRoom /*-1*/)
+void CUser::SendToRegion(Packet *pkt, CUser *pExceptUser /*= nullptr*/, uint16 nEventRoom /*-1*/)
 {
 	g_pMain->Send_Region(pkt, GetMap(), GetRegionX(), GetRegionZ(), pExceptUser, nEventRoom);
 }
@@ -4324,7 +4326,7 @@ void CUser::SendToRegion(Packet *pkt, CUser *pExceptUser /*= nullptr*/, int16 nE
 * @param	pkt		   	The packet.
 * @param	pExceptUser	User to except. If specified, will ignore this user.
 */
-void CUser::SendToZone(Packet *pkt, CUser *pExceptUser /*= nullptr*/, int16 nEventRoom /*-1*/)
+void CUser::SendToZone(Packet *pkt, CUser *pExceptUser /*= nullptr*/, uint16 nEventRoom /*-1*/)
 {
 	g_pMain->Send_Zone(pkt, GetZoneID(), pExceptUser, 0, nEventRoom);
 }
@@ -4389,85 +4391,86 @@ void CUser::OnDeath(Unit *pKiller)
 			// Someone else killed us? Need to clean this up.
 			else
 			{
-				// Did we get killed in the snow war? Handle appropriately.
-				if (GetZoneID() == ZONE_SNOW_BATTLE
-					&& g_pMain->m_byBattleOpen == SNOW_BATTLE)
-				{
-					pUser->GoldGain(SNOW_EVENT_MONEY);
-
-					if (GetNation() == KARUS)
-						g_pMain->m_sKarusDead++;
-					else
-						g_pMain->m_sElmoradDead++;
-				}
-				// All zones other than the snow war.
+				if (GetZoneID() == ZONE_CHAOS_DUNGEON)
+					noticeType = DeathNoticeCoordinates;
 				else
 				{
-					if (isInArena())
+					// Did we get killed in the snow war? Handle appropriately.
+					if (GetZoneID() == ZONE_SNOW_BATTLE
+						&& g_pMain->m_byBattleOpen == SNOW_BATTLE)
 					{
-						// Show death notices in the arena
-						noticeType = DeathNoticeCoordinates;
+						pUser->GoldGain(SNOW_EVENT_MONEY);
+
+						if (GetNation() == KARUS)
+							g_pMain->m_sKarusDead++;
+						else
+							g_pMain->m_sElmoradDead++;
 					}
 					else
 					{
-						uint16 bonusNP = 0;
-						bool bKilledByRival = false;
-
-						if (!GetMap()->isWarZone() && g_pMain->m_byBattleOpen != NATION_BATTLE)
+                        if (isInArena())
 						{
-							// Show death notices in PVP zones
+							// Show death notices in the arena
 							noticeType = DeathNoticeCoordinates;
+						}
+						else
+						{
+							uint16 bonusNP = 0;
+							bool bKilledByRival = false;
 
-							// If the killer has us set as their rival, reward them & remove the rivalry.
-							bKilledByRival = (!pUser->hasRivalryExpired() && pUser->GetRivalID() == GetID());
-							if (bKilledByRival)
+							if (!GetMap()->isWarZone() && g_pMain->m_byBattleOpen != NATION_BATTLE)
 							{
-								// If we are our killer's rival, use the rival notice instead.
+								// Show death notices in PVP zones
 								noticeType = DeathNoticeRival;
 
+								// If the killer has us set as their rival, reward them & remove the rivalry.
+								bKilledByRival = (!pUser->hasRivalryExpired() && pUser->GetRivalID() == GetID());
+								if (bKilledByRival)
+								{
+								// If we are our killer's rival, use the rival notice instead.
+									noticeType = DeathNoticeRival;
+
 								// Apply bonus NP for rival kills
-								bonusNP += RIVALRY_NP_BONUS;
+									bonusNP += RIVALRY_NP_BONUS;
 
 								// This player is no longer our rival
 								pUser->RemoveRival();
 							}
 
-							// The anger gauge is increased on each death.
-							// When your anger gauge is full (5 deaths), you can use the "Anger Explosion" skill.
-							if (!hasFullAngerGauge())
-								UpdateAngerGauge(++m_byAngerGauge);
+								// The anger gauge is increased on each death.
+								// When your anger gauge is full (5 deaths), you can use the "Anger Explosion" skill.
+								if (!hasFullAngerGauge())
+									UpdateAngerGauge(++m_byAngerGauge);
+							}
 
-						}
+                            // Loyalty should be awarded on kill.
+							if (!pUser->isInParty())
+								pUser->LoyaltyChange(GetID(), bonusNP);
+							// In parties, the loyalty should be divided up across the party.
+							// Each party member in range should also receive a "Meat Dumpling".
+							else
+								pUser->LoyaltyDivide(GetID(), bonusNP);
 
-						// Loyalty should be awarded on kill.
-						if (!pUser->isInParty())
-							pUser->LoyaltyChange(GetID(), bonusNP);
-						// In parties, the loyalty should be divided up across the party.
-						// Each party member in range should also receive a "Meat Dumpling".
-						else
-							pUser->LoyaltyDivide(GetID(), bonusNP);
+							if (!pUser->GetMap()->isWarZone())
+								pUser->GoldChange(GetID(), 0);
 
-						if (!pUser->GetMap()->isWarZone())
-							pUser->GoldChange(GetID(), 0);
-
-						if (GetZoneID() != GetNation() && GetZoneID() <= ELMORAD)
-						{
-							int64 nExpLost = m_iMaxExp / 100;
-
-							if (m_bPremiumType != 0)
-								nExpLost = nExpLost * (GetPremiumProperty(PremiumExpRestorePercent)) / 100;
-
-							ExpChange(-nExpLost);
-						}
+							if (GetZoneID() != GetNation() && GetZoneID() <= ELMORAD)
+							{
+								int64 nExpLost = m_iMaxExp / 100;
 
 						// If we don't have a rival, this player is now our rival for 3 minutes.
-						if (isInPKZone()
-							&& !hasRival())
-							SetRival(pUser);
+								if (m_bPremiumType != 0)
+									nExpLost = nExpLost * (GetPremiumProperty(PremiumExpRestorePercent)) / 100;
+
+								ExpChange(-nExpLost);
+							}
+ 
+							// If we don't have a rival, this player is now our rival for 3 minutes.
+							if (isInPKZone()
+								&& !hasRival())
+								SetRival(pUser);
+						}
 					}
-
-					// Send a death notice where applicable
-
 				}
 
 				m_sWhoKilledMe = pUser->GetID();
@@ -4476,7 +4479,7 @@ void CUser::OnDeath(Unit *pKiller)
 			string pKillerPartyUsers;
 			string pTargetPartyUsers;
 
-			if (pUser->isInParty() || isInParty())
+			if (GetZoneID() != ZONE_CHAOS_DUNGEON && (pUser->isInParty() || isInParty()))
 			{
 				CUser *pPartyUser;
 				_PARTY_GROUP *pParty = g_pMain->GetPartyPtr(pUser->GetPartyID());
