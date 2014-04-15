@@ -319,7 +319,7 @@ bool CUser::CanChangeZone(C3DMap * pTargetMap, WarpListResponse & errorReason)
 			errorReason = WarpListNeedNP;
 			return false;
 		}
-		return false;
+		return true;
 
 	case ZONE_RONARK_LAND:
 		if (g_pMain->isWarOpen())
@@ -340,7 +340,7 @@ bool CUser::CanChangeZone(C3DMap * pTargetMap, WarpListResponse & errorReason)
 			return false;
 		}
 
-		return true;
+		return false;
 
 	default:
 		// War zones may only be entered if that war zone is active.

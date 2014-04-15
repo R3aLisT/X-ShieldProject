@@ -871,7 +871,6 @@ void CGameServerDlg::Send_UnitRegion(Packet *pkt, C3DMap *pMap, int x, int z, CU
 
 	FastGuard lock(pMap->m_lock);
 	CRegion *pRegion = pMap->GetRegion(x, z);
-
 	if (pRegion == nullptr)
 		return;
 
@@ -1676,6 +1675,7 @@ void CGameServerDlg::BattleZoneOpenTimer()
 						if (m_nBattleZoneOpenHourStart[x] == nHour)
 							BattleZoneOpen(BATTLEZONE_OPEN, m_nBattlezoneOpenWarZone[x]);
 					}
+
 					vargs.pop_front();
 				}
 			}
@@ -1716,6 +1716,8 @@ void CGameServerDlg::BattleZoneOpenTimer()
 				else if (nBattleZone == ZONE_BATTLE4) // Nereid's Island
 					BattleWinnerResult(BATTLE_WINNER_MONUMENT);
 				else if (nBattleZone == ZONE_BATTLE6) // Oreads
+					BattleWinnerResult(BATTLE_WINNER_KILL);
+				else if (nBattleZone == ZONE_BATTLE7) // New wars
 					BattleWinnerResult(BATTLE_WINNER_KILL);
 			}
 
@@ -1822,7 +1824,7 @@ void CGameServerDlg::BattleWinnerResult(BattleWinnerTypes winnertype)
 
 		if (winner_nation == 0
 			&& (nBattleZone == ZONE_BATTLE4 
-			|| nBattleZone == ZONE_BATTLE6 
+			|| nBattleZone == ZONE_BATTLE6
 			|| nBattleZone == ZONE_BATTLE7))
 		{
 			BattleWinnerResult(BATTLE_WINNER_NPC);
@@ -1841,7 +1843,7 @@ void CGameServerDlg::BattleWinnerResult(BattleWinnerTypes winnertype)
 
 void CGameServerDlg::BattleZoneOpen(int nType, uint8 bZone /*= 0*/)
 {
-	if ((nType == BATTLEZONE_OPEN || nType == SNOW_BATTLEZONE_OPEN) && !g_pMain->isWarOpen())
+	if ((nType == BATTLEZONE_OPEN || nType == SNOW_BATTLEZONE_OPEN) && m_byBattleOpen == NO_BATTLE)
 	{
 		m_byBattleOpen = nType == BATTLEZONE_OPEN ? NATION_BATTLE : SNOW_BATTLE;	
 		m_byOldBattleOpen = nType == BATTLEZONE_OPEN ? NATION_BATTLE : SNOW_BATTLE;
@@ -1862,7 +1864,7 @@ void CGameServerDlg::BattleZoneOpen(int nType, uint8 bZone /*= 0*/)
 			KickOutZoneUsers(ZONE_KROWAZ_DOMINION);
 		}
 	}
-	else if (nType == BATTLEZONE_CLOSE && isWarOpen())
+	else if (nType == BATTLEZONE_CLOSE && m_byBattleOpen != NO_BATTLE)
 		Announcement(BATTLEZONE_CLOSE);
 	else
 		return;
@@ -1946,7 +1948,7 @@ void CGameServerDlg::BanishLosers()
 			if (pUser->GetMap()->isWarZone() && m_bVictory != pUser->GetNation())
 				pUser->KickOutZoneUser(true);
 		}
-		else if (!isWarOpen())
+		else if (m_byBattleOpen == NO_BATTLE)
 		{
 			// Kick out invaders
 			if ((pUser->GetZoneID() <= ELMORAD && pUser->GetZoneID() != pUser->GetNation())
@@ -2106,7 +2108,7 @@ void CGameServerDlg::TempleEventCreateRooms()
 			||	!pUser->isInGame())
 			continue;
 
-		pUser->UpdateEventUser(pUser->GetSocketID(), nCurrentEventRoom);
+		g_pMain->UpdateEventUser(pUser, nCurrentEventRoom);
 		nCurrentUserCount++;
 
 		if (nCurrentUserCount == nMaxUserCount)
@@ -2209,7 +2211,7 @@ void CGameServerDlg::TempleEventFinish()
 			||	!pUser->isInGame())
 			continue;
 
-		pUser->UpdateEventUser(pUser->GetSocketID(), -1);
+		g_pMain->UpdateEventUser(pUser, 0);
 
 		_USER_RANKING * pRankInfo = m_UserRankingArray->GetData(itr->second->m_socketID);
 
@@ -2503,9 +2505,10 @@ int CGameServerDlg::KickOutAllUsers()
 		CUser *pUser = TO_USER(itr->second);
 		if (pUser->isInGame())
 			count++;
-			g_DBAgent.UpdateUser(pUser->GetName(), UPDATE_LOGOUT, pUser);
-			g_DBAgent.UpdateWarehouseData(pUser->GetAccountName(), UPDATE_LOGOUT, pUser);
-			g_DBAgent.UpdateSavedMagic(pUser);
+
+		g_DBAgent.UpdateUser(pUser->GetName(), UPDATE_LOGOUT, pUser);
+		g_DBAgent.UpdateWarehouseData(pUser->GetAccountName(), UPDATE_LOGOUT, pUser);
+		g_DBAgent.UpdateSavedMagic(pUser);
 		pUser->Disconnect();
 	}
 	return count;
@@ -2810,4 +2813,18 @@ void CGameServerDlg::WriteChatLogFile(string & logMessage)
 {
 	fwrite(logMessage.c_str(), logMessage.length(), 1, m_fpChat);
 	fflush(m_fpChat);
+}
+
+
+uint8 CGameServerDlg::TempleEventGetRoomUsers(uint16 nEventRoom) 
+{
+	uint8 nEventRoomUserCount = 0;
+
+	foreach_stlmap (itr, m_TempleEventUserArray)
+	{
+		if (itr->second->m_bEventRoom == nEventRoom)
+			nEventRoomUserCount++;
+	}
+
+	return nEventRoomUserCount;
 }

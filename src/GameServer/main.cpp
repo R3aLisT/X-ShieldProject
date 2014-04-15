@@ -49,7 +49,7 @@ int main()
 #endif
 	}
 
-	printf("Server shutting down, please wait...\n");
+	printf("Server shutting down, please wait...\n"); 
 
 	// This seems redundant, but it's not. 
 	// We still have the destructor for the dialog instance, which allows time for threads to properly cleanup.
@@ -62,13 +62,14 @@ int main()
 	UnhookSignals();
 
 	if (g_pMain->m_fpDeathUser != nullptr)
-		fclose(g_pMain->m_fpDeathUser);
-
-	if (g_pMain->m_fpDeathNpc != nullptr)
-		fclose(g_pMain->m_fpDeathNpc);
-
-	if (g_pMain->m_fpChat != nullptr)
+ 		fclose(g_pMain->m_fpDeathUser);
+ 
+ 	if (g_pMain->m_fpDeathNpc != nullptr)
+ 		fclose(g_pMain->m_fpDeathNpc);
+ 
+ 	if (g_pMain->m_fpChat != nullptr)
 		fclose(g_pMain->m_fpChat);
+
 	return 0;
 }
 

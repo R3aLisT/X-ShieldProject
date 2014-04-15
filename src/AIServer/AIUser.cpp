@@ -162,8 +162,8 @@ void CUser::HealAreaCheck(int rx, int rz)
 	FastGuard lock(pMap->m_lock);
 	CRegion *pRegion = &pMap->m_ppRegion[rx][rz];
 
-	    if (pRegion == nullptr)
-			return;
+		    if (pRegion == nullptr)
+ 			return;
 
 	foreach_stlmap (itr, pRegion->m_RegionNpcArray)
 	{

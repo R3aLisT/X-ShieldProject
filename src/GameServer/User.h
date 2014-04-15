@@ -172,7 +172,6 @@ public:
 	// Anger gauge system 
 	uint8	m_byAngerGauge; // values range from 0-5
 
-
 	// Magic System Cooldown checks
 	SkillCooldownList	m_CoolDownList;
 
@@ -378,6 +377,8 @@ public:
 
 	INLINE uint16 GetClass() { return m_sClass; }
 	INLINE bool GetPremium() { return m_bPremiumType != 0 ? true : false; }
+	INLINE bool isLockableScroll(uint8 buffType) { return (buffType == BUFF_TYPE_HP_MP || buffType == BUFF_TYPE_AC || buffType == BUFF_TYPE_DAMAGE); }
+
 
 	/**
 	* @brief	Gets the player's base class type, independent of nation.
@@ -627,7 +628,8 @@ public:
 	void ShowEffect(uint32 nSkillID);
 	void ShowNpcEffect(uint32 nEffectID, bool bSendToRegion = false);
 	void SendAnvilRequest(uint16 sNpcID, uint8 bType = ITEM_UPGRADE_REQ);
-	void RecastSavedMagic(bool bFillToMaxHealth = false);
+	void RecastSavedMagic(uint8 buffType = 0);
+	void RecastLockableScrolls(uint8 buffType);
 
 	// packet handlers start here
 	void VersionCheck(Packet & pkt);
@@ -694,7 +696,7 @@ public:
 	COMMAND_HANDLER(HandleExpChangeCommand);
 	COMMAND_HANDLER(HandleGoldChangeCommand);
 	COMMAND_HANDLER(HandleExpAddCommand); /* for the server XP event */
-	COMMAND_HANDLER(HandleNpAddCommand); /* for the server Np event */
+	COMMAND_HANDLER(HandleNpAddCommand); /* for the server NP event */
 	COMMAND_HANDLER(HandleMoneyAddCommand); /* for the server coin event */
 	COMMAND_HANDLER(HandlePermitConnectCommand);
 	COMMAND_HANDLER(HandleTeleportAllCommand);
@@ -888,9 +890,9 @@ public:
 	void RemovePlayerRank();
 	void UpdatePlayerRank();
 
+	bool isEventUser();
+
 	void AddEventUser(CUser * pUser = nullptr);
-	void RemoveEventUser(uint16 m_socketID);
-	void UpdateEventUser(uint16 m_socketID, int16 nEventRoom = 0);
 	bool isEventUser(uint16 m_socketID);
 
 	void SendTargetHP( uint8 echo, int tid, int damage = 0 );

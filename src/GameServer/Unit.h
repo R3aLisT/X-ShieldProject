@@ -137,6 +137,16 @@ public:
 		return m_buffMap.find(buff) != m_buffMap.end();
 	}
 
+		INLINE bool hasDebuff(uint8 buff)
+	{
+		FastGuard lock(m_buffLock);
+		auto itr = m_buffMap.find(buff);
+		if (itr != m_buffMap.end() && itr->second.isDebuff())
+			return true;
+
+		return false;
+	}
+
 	INLINE bool canInstantCast() { return m_bInstantCast; }
 	INLINE bool canStealth()	{ return m_bCanStealth; }
 
@@ -186,7 +196,7 @@ public:
 	void Send_AIServer(Packet *result);
 
 	void InitType3();
-	void InitType4(bool bRemoveSavedMagic = false);
+	void InitType4(bool bRemoveSavedMagic = false, uint8 buffType = 0);
 	void AddType4Buff(uint8 bBuffType, _BUFF_TYPE4_INFO & pBuffInfo);
 
 	virtual void StateChangeServerDirect(uint8 bType, uint32 nBuff) {}
@@ -304,6 +314,7 @@ public:
 	Type4BuffMap m_buffMap;
 	Type9BuffMap m_type9BuffMap;
 	FastMutex	m_buffLock;
+	std::recursive_mutex	m_buffLock1;
 	uint8		m_buffCount; // counter for buffs (not debuffs). Used for identifying when the user is buffed.
 
 	bool	m_bIsBlinded;

@@ -442,7 +442,7 @@ void CUser::ReqUserLogOut()
 	g_pMain->KillNpc(GetSocketID());
 
 	if (isInTempleEventZone())
-		RemoveEventUser(GetSocketID());
+		g_pMain->RemoveEventUser(this);
 
 	if (m_bLevel == 0)
 		TRACE("### ReqUserLogOut - Level is Zero : bRoom=%d, bNation=%d, bZone=%d ####\n", GetEventRoom(), GetNation(), GetZoneID());

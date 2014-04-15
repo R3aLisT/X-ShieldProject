@@ -20,6 +20,7 @@ struct _MAGIC_TABLE
 	uint8	bSuccessRate;
 	uint8	bType[2];
 	uint16	sRange;
+	uint8	sUseStanding;
 	uint16	sEtc;
 };
 

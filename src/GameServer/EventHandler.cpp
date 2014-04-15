@@ -11,7 +11,7 @@ void CGameServerDlg::SendEventRemainingTime(bool bSendAll, CUser *pUser, uint8 Z
 
 	if (ZoneID == ZONE_BATTLE4)
 		nRemainingTime = m_byBattleRemainingTime / 2;
-	if (ZoneID == ZONE_BIFROST || ZoneID ==  ZONE_RONARK_LAND)
+	else if (ZoneID == ZONE_BIFROST || ZoneID ==  ZONE_RONARK_LAND)
 		nRemainingTime = m_sBifrostRemainingTime;
 
 	result << nRemainingTime;
@@ -63,10 +63,11 @@ void CUser::TempleProcess(Packet &pkt )
 {
 	uint8 opcode = pkt.read<uint8>();
 
-	switch(opcode)
+	switch (opcode)
 	{
 	case MONSTER_STONE:
-		MonsterStoneProcess(); 
+		MonsterStoneProcess();
+		break;
 	case TEMPLE_EVENT_JOIN:
 		TempleOperations(opcode);
 		break;
@@ -78,10 +79,10 @@ void CUser::TempleProcess(Packet &pkt )
 
 void CUser::MonsterStoneProcess()
 {
-	if(CheckExistItem(MONSTER_STONE,1))
+	if(CheckExistItem(ITEM_MONSTER_STONE,1))
 	{
-		RobItem(MONSTER_STONE,1);
-		ZoneChange(myrand(81,83),m_curx,m_curz);
+		RobItem(ITEM_MONSTER_STONE,1);
+		ZoneChange(myrand(1004,1016),m_curx,m_curz);
 	}
 } 
 
@@ -92,7 +93,7 @@ void CUser::TempleOperations(uint8 bType)
 	uint8 bResult = 1;
 	Packet result(WIZ_EVENT);
 
-	if(bType == TEMPLE_EVENT_JOIN && !isEventUser(GetSocketID()))
+	if(bType == TEMPLE_EVENT_JOIN && !isEventUser())
 	{
 		if (nActiveEvent == TEMPLE_EVENT_CHAOS)
 		{
@@ -104,29 +105,25 @@ void CUser::TempleOperations(uint8 bType)
 				bResult = 3;
 		}
 
-		if (bResult == 1) {
-			GetNation() == KARUS ? g_pMain->pTempleEvent.KarusUserCount++ :g_pMain->pTempleEvent.ElMoradUserCount++;
-			g_pMain->pTempleEvent.AllUserCount = (g_pMain->pTempleEvent.KarusUserCount + g_pMain->pTempleEvent.ElMoradUserCount);
-
-			TempleOperations(TEMPLE_EVENT_COUNTER);
-			AddEventUser();
-		}
-
 		result << bType << bResult << nActiveEvent;
 		Send(&result);
+
+		if (bResult == 1) 
+		{
+			GetNation() == KARUS ? g_pMain->pTempleEvent.KarusUserCount++ :g_pMain->pTempleEvent.ElMoradUserCount++;
+			g_pMain->pTempleEvent.AllUserCount = (g_pMain->pTempleEvent.KarusUserCount + g_pMain->pTempleEvent.ElMoradUserCount);
+			g_pMain->AddEventUser(this);
+			TempleOperations(TEMPLE_EVENT_COUNTER);
+		}
 	}
-	else if (bType == TEMPLE_EVENT_DISBAND && isEventUser(GetSocketID()))
+	else if (bType == TEMPLE_EVENT_DISBAND && isEventUser())
 	{
 		GetNation() == KARUS ? g_pMain->pTempleEvent.KarusUserCount-- : g_pMain->pTempleEvent.ElMoradUserCount--;
 		g_pMain->pTempleEvent.AllUserCount = g_pMain->pTempleEvent.KarusUserCount + g_pMain->pTempleEvent.ElMoradUserCount;
-
-		TempleOperations(TEMPLE_EVENT_COUNTER);
-		RemoveEventUser(GetSocketID());
-
+		g_pMain->RemoveEventUser(this);
 		result <<  bType << bResult << nActiveEvent;
 		Send(&result);
-
-
+		TempleOperations(TEMPLE_EVENT_COUNTER);
 	}
 	else if (bType == TEMPLE_EVENT_COUNTER)
 	{
@@ -137,15 +134,12 @@ void CUser::TempleOperations(uint8 bType)
 		else
 			result << g_pMain->pTempleEvent.KarusUserCount << g_pMain->pTempleEvent.ElMoradUserCount;
 
-		g_pMain->Send_All(&result);
+		g_pMain->Send_All(&result,nullptr,Nation::ALL,0,true);
 	}
 }
 
-void CUser::AddEventUser(CUser *pUser)
+void CGameServerDlg::AddEventUser(CUser *pUser)
 {
-	if (pUser == nullptr)
-		pUser = this;
-
 	if (pUser == nullptr)
 	{
 		TRACE("#### AddEventUser : pUser == nullptr ####\n");
@@ -156,36 +150,75 @@ void CUser::AddEventUser(CUser *pUser)
 
 	pEventUser->m_socketID =  pUser->GetSocketID();
 	pEventUser->m_bEventRoom = pUser->GetEventRoom();
-	pEventUser->m_bZone = pUser->GetZoneID();
-	pEventUser->m_bNation = pUser->GetNation();
 
 	if (!g_pMain->m_TempleEventUserArray.PutData(pEventUser->m_socketID, pEventUser))
 		delete pEventUser;
 }
 
-void CUser::RemoveEventUser(uint16 m_socketID)
+void CGameServerDlg::RemoveEventUser(CUser *pUser)
 {
-	if (g_pMain->m_TempleEventUserArray.GetData(m_socketID) != nullptr)
-		g_pMain->m_TempleEventUserArray.DeleteData(m_socketID);
-
-	m_bEventRoom = 0;
-}
-
-void CUser::UpdateEventUser(uint16 m_socketID, int16 nEventRoom)
-{
-	_TEMPLE_EVENT_USER * pEventUser = g_pMain->m_TempleEventUserArray.GetData(m_socketID);
-	CUser *pUser = g_pMain->GetUserPtr(m_socketID);
-
-	if (pEventUser == nullptr || pUser == nullptr)
+	if (pUser == nullptr)
+	{
+		TRACE("#### RemoveEventUser : pUser == nullptr ####\n");
 		return;
+	}
 
-	pEventUser->m_bEventRoom = nEventRoom;
-	pUser->m_bEventRoom = nEventRoom;
+	if (g_pMain->m_TempleEventUserArray.GetData(pUser->GetSocketID()) != nullptr)
+		g_pMain->m_TempleEventUserArray.DeleteData(pUser->GetSocketID());
+
+	pUser->m_bEventRoom = 0;
 }
 
-bool CUser::isEventUser(uint16 m_socketID)
+void CGameServerDlg::UpdateEventUser(CUser *pUser, uint16 nEventRoom)
 {
-	_TEMPLE_EVENT_USER * pEventUser = g_pMain->m_TempleEventUserArray.GetData(m_socketID);
+	if (pUser == nullptr)
+	{
+		TRACE("#### UpdateEventUser : pUser == nullptr ####\n");
+		return;
+	}
+
+	_TEMPLE_EVENT_USER * pEventUser = g_pMain->m_TempleEventUserArray.GetData(pUser->GetSocketID());
+
+	if (pEventUser)
+	{
+		pEventUser->m_bEventRoom = nEventRoom;
+		pUser->m_bEventRoom = nEventRoom;
+	}
+}
+
+void CGameServerDlg::SetEventUser(CUser *pUser)
+{
+	if (pUser == nullptr)
+	{
+		TRACE("#### SetEventUser : pUser == nullptr ####\n");
+		return;
+	}
+
+	uint8 nMaxUserCount = 0;
+
+	switch (g_pMain->pTempleEvent.ActiveEvent)
+	{
+	case TEMPLE_EVENT_BORDER_DEFENCE_WAR:
+		nMaxUserCount = 16;
+		break;
+	case TEMPLE_EVENT_CHAOS:
+		nMaxUserCount = 20;
+		break;
+	case TEMPLE_EVENT_JURAD_MOUNTAIN:
+		nMaxUserCount = 16;
+		break;
+	}
+
+	if (g_pMain->TempleEventGetRoomUsers(g_pMain->pTempleEvent.LastEventRoom) >= nMaxUserCount)
+		g_pMain->pTempleEvent.LastEventRoom++;
+
+	if (g_pMain->TempleEventGetRoomUsers(g_pMain->pTempleEvent.LastEventRoom) < nMaxUserCount)
+		g_pMain->UpdateEventUser(pUser, g_pMain->pTempleEvent.LastEventRoom);
+}
+
+bool CUser::isEventUser()
+{
+	_TEMPLE_EVENT_USER * pEventUser = g_pMain->m_TempleEventUserArray.GetData(GetSocketID());
 
 	if (pEventUser != nullptr)
 		return true;

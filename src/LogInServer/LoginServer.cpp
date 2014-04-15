@@ -130,7 +130,9 @@ void LoginServer::GetInfoFromIni()
 	int nServerCount = ini.GetInt("SERVER_LIST", "COUNT", 1);
 	if (nServerCount <= 0) 
 		nServerCount = 1;
+
 	m_nLoginPort = ini.GetInt("SETTINGS","PORT", 15100);
+
 	char key[20]; 
 	_SERVER_INFO* pInfo = nullptr;
 

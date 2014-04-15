@@ -110,8 +110,8 @@ void LoginSession::HandleLogin(Packet & pkt)
 		sAuthMessage = "ERROR";
 		break;
 	case AUTH_AGREEMENT:
-		sAuthMessage = "USER AGREEMENT";
-		break;
+ 		sAuthMessage = "USER AGREEMENT";
+ 		break;
 	case AUTH_FAILED:
 		sAuthMessage = "FAILED";
 		break;
@@ -132,10 +132,12 @@ void LoginSession::HandleLogin(Packet & pkt)
 	{
 
 	}
+
 	else if (resultCode == AUTH_AGREEMENT)
 	{
 		result << uint8(0);
 	}
+
 	g_pMain->WriteUserLogFile(string_format("[ LOGIN - %d:%d:%d ] ID=%s, PW=%s, Authentication=%s\n",time.GetHour(),time.GetMinute(),time.GetSecond(),account.c_str(),password.c_str(),sAuthMessage.c_str()));
 
 	Send(&result);	

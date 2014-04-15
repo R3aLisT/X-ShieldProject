@@ -118,6 +118,7 @@ enum ItemSlotType
 // Durability Type
 #define ATTACK				0x01
 #define DEFENCE				0x02
+#define REPAIR_ALL			0x03
 ////////////////////////////////////////////////////////////
 ////////////////////////////////////////////////////////////
 // Knights Authority Type
@@ -291,10 +292,7 @@ enum SellType
 struct _ITEM_TABLE
 {
 	uint32	m_iNum;
-	uint8	m_bExt;
 	std::string	m_sName;
-	std::string m_sDesc;
-	uint8   m_bIconID;
 	uint8	m_bKind;
 	uint8	m_bSlot;
 	uint8	m_bRace;
@@ -350,10 +348,7 @@ struct _ITEM_TABLE
 	int16	m_bMagicR;
 	int16	m_bPoisonR;
 	int16	m_bCurseR;
-	uint8	m_bItemClass;
-	uint8	m_bItemSetID;
-	uint8	m_bGiveItem;
-	
+
 	INLINE bool isStackable() { return m_bCountable != 0; }
 
 	INLINE uint8 GetKind() { return m_bKind; }
@@ -648,12 +643,15 @@ struct _USER_RANKING
 
 struct _EVENT_STATUS
 {
-	bool isActive;
 	int16 ActiveEvent;
+	int8 ZoneID;
+	uint8 LastEventRoom;
 	uint32 StartTime;
 	uint16 AllUserCount;
 	uint16 ElMoradUserCount;
 	uint16 KarusUserCount;
+	bool isAttackable;
+	bool isActive;
 };
 
 struct _TEMPLE_EVENT_USER

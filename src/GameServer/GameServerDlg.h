@@ -1,4 +1,4 @@
-#pragma once
+﻿#pragma once
 
 #ifdef GAMESERVER
 
@@ -110,6 +110,7 @@ public:
 	void Send_KnightsAlliance(uint16 sAllianceID, Packet *pkt);
 	void SetGameTime();
 	void ResetPlayerRankings();
+
 	void UpdateWeather();
 	void UpdateGameTime();
 	void ResetLoyaltyMonthly();
@@ -118,12 +119,19 @@ public:
 	CNpc*  FindNpcInZone(uint16 sPid, uint8 byZone);
 	void TempleEventTimer();
 	void TempleEventStart();
-	void TempleEventCreateRooms();
 	void TempleEventTeleportUsers();
+	uint8 TempleEventGetRoomUsers(uint16 nEventRoom = 0);
+	void TempleEventSummonChaosCubes();
 	void TempleEventFinish();
 	void TempleEventGetActiveEventTime(CUser *pUser);
 	void TempleEventSendActiveEventTime(CUser *pUser);
 	void TempleEventKickOutUser(CUser *pUser);
+	void TempleEventReset();
+	void TempleEventCreateRooms();
+	void AddEventUser(CUser * pUser);
+	void RemoveEventUser(CUser * pUser);
+	void UpdateEventUser(CUser * pUser, uint16 nEventRoom = 0);
+	void SetEventUser(CUser *pUser);
 	std::string GetBattleAndNationMonumentName(int16 TrapNumber = -1, uint8 ZoneID = 0);
 	void CheckNationMonumentRewards();
 
@@ -417,6 +425,16 @@ public:
 
 	uint8	m_bSantaOrAngel;
 	uint8	m_sRankResetHour;
+
+	// National points
+	int m_Loyalty_Ardream_Source;
+	int m_Loyalty_Ardream_Target;
+	int m_Loyalty_Ronark_Land_Base_Source;
+	int m_Loyalty_Ronark_Land_Base_Target;
+	int m_Loyalty_Ronark_Land_Source;
+	int m_Loyalty_Ronark_Land_Target;
+	int m_Loyalty_Other_Zone_Source;
+	int m_Loyalty_Other_Zone_Target;
 
 	// Bifrost
 	uint8   m_nBifrostTime[BIFROST_EVENT_COUNT];

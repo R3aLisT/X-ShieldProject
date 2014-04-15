@@ -809,7 +809,7 @@ void Unit::InitType3()
 	m_bType3Flag = false;
 }
 
-void Unit::InitType4(bool bRemoveSavedMagic /*= false*/)
+void Unit::InitType4(bool bRemoveSavedMagic /*= false*/, uint8 buffType /* = 0 */)
 {
 	// Remove all buffs that should not be recast.
 	FastGuard lock(m_buffLock);
@@ -818,7 +818,10 @@ void Unit::InitType4(bool bRemoveSavedMagic /*= false*/)
 	for (auto itr = buffMap.begin(); itr != buffMap.end(); itr++)
 	{
 #ifdef GAMESERVER
-		CMagicProcess::RemoveType4Buff(itr->first, this, bRemoveSavedMagic);
+		if (buffType > 0 && itr->second.m_bBuffType != buffType)
+			continue;
+
+		CMagicProcess::RemoveType4Buff(itr->first, this, bRemoveSavedMagic, buffType > 0 ? true : false);
 #endif
 	}
 }
@@ -1073,9 +1076,9 @@ void KOMap::SetZoneAttributes(int zoneNumber)
 		m_zoneFlags = ZF_ATTACK_OTHER_NATION | ZF_WAR_ZONE;
 		break;
 	case ZONE_BATTLE7:
-		m_zoneType = ZoneAbilityPVP;
-		m_zoneFlags = ZF_ATTACK_OTHER_NATION | ZF_WAR_ZONE;
-		break;
+ 		m_zoneType = ZoneAbilityPVP;
+    	m_zoneFlags = ZF_ATTACK_OTHER_NATION | ZF_WAR_ZONE;
+ 		break;
 	case ZONE_SNOW_BATTLE:
 		m_zoneType = ZoneAbilityPVP;
 		m_zoneFlags = ZF_ATTACK_OTHER_NATION | ZF_WAR_ZONE;
@@ -1102,7 +1105,7 @@ void KOMap::SetZoneAttributes(int zoneNumber)
 		break;
 	case ZONE_BORDER_DEFENSE_WAR:
 		m_zoneType = ZoneAbilityPVP;
-		m_zoneFlags = ZF_ATTACK_OTHER_NATION | ZF_TALK_OTHER_NATION;
+		m_zoneFlags = ZF_ATTACK_OTHER_NATION | ZF_ATTACK_SAME_NATION;
 		break;
 	case ZONE_CHAOS_DUNGEON:
 		m_zoneType = ZoneAbilityPVP;

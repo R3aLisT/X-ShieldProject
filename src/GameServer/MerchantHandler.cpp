@@ -17,7 +17,7 @@ enum MerchantOpenResponseCodes
 void CUser::MerchantProcess(Packet & pkt)
 {
 	// Currently disabled...
-	return;
+ 	return;
 
 	uint8 opcode = pkt.read<uint8>();
 	switch (opcode)
@@ -454,9 +454,9 @@ void CUser::BuyingMerchantInsert(Packet & pkt)
 		m_arMerchantItems[i].sDuration = pItem->m_sDuration;
 		totalamount += buying_price;
 	}
-	
+
 	if (!hasCoins(totalamount))
-	      return;
+		return;
 
 	m_bMerchantState = MERCHANT_STATE_BUYING;
 	Packet result(WIZ_MERCHANT, uint8(MERCHANT_BUY_INSERT));
@@ -527,8 +527,8 @@ void CUser::BuyingMerchantBuy(Packet & pkt)
 	// Make sure the merchant actually has that item in that slot
 	// and that they want enough, and the selling user has enough
 	if (pWantedItem == nullptr 
-	        || pSellerItem == nullptr
-	        || pWantedItem->nNum != pSellerItem->nNum
+		|| pSellerItem == nullptr
+		|| pWantedItem->nNum != pSellerItem->nNum
 		|| pWantedItem->sCount < sStackSize
 		|| pSellerItem->sCount < sStackSize
 		// For scrolls, this will ensure you can only sell a full stack of scrolls.

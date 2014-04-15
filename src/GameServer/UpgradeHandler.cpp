@@ -91,9 +91,7 @@ void CUser::ItemUpgrade(Packet & pkt, uint8 nUpgradeType)
 		goto fail_return;
 	}
 
-#if __VERSION >= 1453 // not sure when this occurred, assuming ROFD.
 	pkt >> bType; // either preview or upgrade, need to allow for these types
-#endif
 	pkt >> sNpcID;
 	for (int i = 0; i < 10; i++)
 	{
@@ -118,7 +116,8 @@ void CUser::ItemUpgrade(Packet & pkt, uint8 nUpgradeType)
 	for (int x = 0; x < 10; x++)
 	{
 		if (bPos[x] != -1
-			&& nItemID[x] != GetItem(SLOT_MAX + bPos[x])->nNum)
+			&& (nItemID[x] > 0 
+			&& nItemID[x] != GetItem(SLOT_MAX + bPos[x])->nNum))
 			goto fail_return;
 	}
 
@@ -231,6 +230,7 @@ void CUser::ItemUpgrade(Packet & pkt, uint8 nUpgradeType)
 					continue;
 
 				_ITEM_DATA * pItem = GetItem(SLOT_MAX + bPos[x]);
+
 				if (pItem == nullptr
 					|| nItemID[x] != pItem->nNum 
 					|| (nUpgradeType != ITEM_ACCESSORIES 
@@ -326,9 +326,7 @@ void CUser::ItemUpgrade(Packet & pkt, uint8 nUpgradeType)
 		}
 	} // end of scoped lock
 
-#if __VERSION >= 1453
 	result << bType;
-#endif
 
 	result << bResult;
 	foreach_array (i, nItemID)
@@ -428,7 +426,7 @@ void CUser::BifrostPieceProcess(Packet & pkt)
 
 	if (g_pMain->m_ItemExchangeArray.GetSize() > 0)
 	{
-		foreach_stlmap_nolock(itr, g_pMain->m_ItemExchangeArray)
+		foreach_stlmap (itr, g_pMain->m_ItemExchangeArray)
 		{
 			if (itr->second->nOriginItemNum[0] == nExchangeItemID)
 			{
@@ -584,7 +582,7 @@ void CUser::SpecialItemExchange(Packet & pkt)
 	{
 		if (g_pMain->m_ItemExchangeArray.GetSize() > 0)
 		{
-			foreach_stlmap_nolock(itr, g_pMain->m_ItemExchangeArray)
+			foreach_stlmap (itr, g_pMain->m_ItemExchangeArray)
 			{
 				if (itr->second->bRandomFlag == 102) // Special Item Exchange
 				{

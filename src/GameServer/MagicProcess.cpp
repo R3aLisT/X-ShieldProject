@@ -52,49 +52,47 @@ void CMagicProcess::UpdateAIServer(uint32 nSkillID, AISkillOpcode opcode,
 #else
 void CMagicProcess::MagicPacket(Packet & pkt, Unit * pCaster /*= nullptr*/)
 {
-	MagicInstance instance;
-	pkt >> instance.bOpcode >> instance.nSkillID;
+	_MAGIC_TABLE * pSkill;
+	_MAGIC_TYPE4 * pType4;
+	Unit * pSkillCaster, * pSkillTarget;
+	uint32 nSkillID;
+	uint16 sCasterID, sTargetID;
+	uint8 bOpcode;
+	bool bIsRecastingSavedMagic;
 
-	instance.pSkill = g_pMain->m_MagictableArray.GetData(instance.nSkillID);
-	if (instance.pSkill == nullptr)
-	{
-		if (pCaster != nullptr)
-			TRACE("[%s] Used skill %d but it does not exist.\n", pCaster->GetName().c_str(), instance.nSkillID);
+	pkt >> bOpcode >> nSkillID >> sCasterID >> sTargetID >> bIsRecastingSavedMagic;
 
-		if (pCaster->isPlayer() && instance.nSkillID < 0)
-		{
-			DateTime time;
-			g_pMain->SendFormattedNotice("%s is currently disconnect for skill hack.",Nation::ALL, pCaster->GetName().c_str());
-			g_pMain->WriteCheatLogFile(string_format("[ SkillHack - %d:%d:%d ] %s Disconnected for SkillHack.\n", time.GetHour(),time.GetMinute(),time.GetSecond(), pCaster->GetName().c_str()));
-			TO_USER(pCaster)->Disconnect();
-		}
-
+	pSkill = g_pMain->m_MagictableArray.GetData(nSkillID);
+	if (pSkill == nullptr)
 		return;
+
+	pSkillCaster = g_pMain->GetUnitPtr(sCasterID);
+	pSkillTarget = g_pMain->GetUnitPtr(sTargetID);
+
+	if (bOpcode == AISkillOpcodeBuff || bOpcode == AISkillOpcodeRemoveBuff)
+	{
+		pType4 = g_pMain->m_Magictype4Array.GetData(nSkillID);
+		if (pType4 == nullptr)
+			return;
 	}
 
-	pkt >> instance.sCasterID >> instance.sTargetID
-		>> instance.sData[0] >> instance.sData[1] >> instance.sData[2] >> instance.sData[3]
-	>> instance.sData[4] >> instance.sData[5] >> instance.sData[6];
+	switch (bOpcode)
+	{
+	case AISkillOpcodeBuff:
+		if (pSkillCaster == nullptr || pSkillTarget == nullptr)
+			return;
 
-	// Prevent users from faking other players or NPCs.
-	if (pCaster != nullptr // if it's nullptr, it's from AI.
-		&& (instance.sCasterID >= NPC_BAND 
-		|| instance.sCasterID != pCaster->GetID()))
-		return;
+		GrantType4Buff(pSkill, pType4, pSkillCaster, pSkillTarget, bIsRecastingSavedMagic);
+		break;
 
-	instance.bIsRecastingSavedMagic = false;
-	instance.Run();
-}
+	case AISkillOpcodeRemoveBuff:
+		if (pSkillTarget == nullptr)
+			return;
 
-void CMagicProcess::UpdateAIServer(uint32 nSkillID, AISkillOpcode opcode, 
-								   Unit * pTarget, Unit * pCaster /*= nullptr*/, 
-								   bool bIsRecastingSavedMagic /*= false*/)
-{
-	Packet result(AG_MAGIC_ATTACK_REQ, uint8(opcode));
-	int16	sCasterID = (pCaster == nullptr ? -1 : pCaster->GetID()),
-		sTargetID = (pTarget == nullptr ? -1 : pTarget->GetID());
-	result << nSkillID << sCasterID << sTargetID << bIsRecastingSavedMagic;
-	g_pMain->Send_AIServer(&result);
+		RemoveType4Buff(pType4->bBuffType, pSkillTarget);
+		break;
+	}
+
 }
 #endif
 
@@ -138,26 +136,25 @@ bool CMagicProcess::UserRegionCheck(Unit * pSkillCaster, Unit * pSkillTarget, _M
 		if (pSkillCaster->isHostileTo(pSkillTarget))
 			goto final_test;
 		break;
-		
-	case MORAL_AREA_ALL:
-		if (pSkillCaster->isNPC()
-			|| pSkillTarget->isNPC())
-			return false;
 
-		if ((TO_USER(pSkillCaster)->isInArena() 
-			&& TO_USER(pSkillTarget)->isInArena())
-			|| (TO_USER(pSkillCaster)->isInPVPZone() 
-			&& TO_USER(pSkillTarget)->isInPVPZone())
-			|| (TO_USER(pSkillCaster)->isInTempleEventZone()
-			&& TO_USER(pSkillTarget)->isInTempleEventZone()))
-		goto final_test;
-		
-		// Players cant attack other players in the safety area.
-		if (TO_USER(pSkillCaster)->isInSafetyArea() 
-			&& TO_USER(pSkillTarget)->isInSafetyArea())
-			return false;
-		break;
+	case MORAL_AREA_ALL:
+ 		if (pSkillCaster->isNPC()
+ 			|| pSkillTarget->isNPC())
+ 			return false;
  
+ 		if ((TO_USER(pSkillCaster)->isInArena() 
+ 			&& TO_USER(pSkillTarget)->isInArena())
+ 			|| (TO_USER(pSkillCaster)->isInPVPZone() 
+ 			&& TO_USER(pSkillTarget)->isInPVPZone())
+ 			|| (TO_USER(pSkillCaster)->isInTempleEventZone()
+ 			&& TO_USER(pSkillTarget)->isInTempleEventZone()))
+ 		goto final_test;
+ 		
+ 		// Players cant attack other players in the safety area.
+ 		if (TO_USER(pSkillCaster)->isInSafetyArea() 
+ 			&& TO_USER(pSkillTarget)->isInSafetyArea())
+ 			return false;
+ 		break;
 
 	case MORAL_AREA_FRIEND:
 		if (!pSkillCaster->isHostileTo(pSkillTarget))
@@ -607,7 +604,7 @@ bool CMagicProcess::GrantType4Buff(_MAGIC_TABLE * pSkill, _MAGIC_TYPE4 *pType, U
 	return true;
 }
 
-bool CMagicProcess::RemoveType4Buff(uint8 byBuffType, Unit *pTarget, bool bRemoveSavedMagic /*= true*/)
+bool CMagicProcess::RemoveType4Buff(uint8 byBuffType, Unit *pTarget, bool bRemoveSavedMagic /*= true*/, bool bRecastSavedMagic /*= false*/)
 {
 	// Buff must be added at this point. If it doesn't exist, we can't remove it twice.
 	FastGuard lock(pTarget->m_buffLock);

@@ -595,7 +595,7 @@ void CUser::SendLoyaltyChange(int32 nChangeAmount /*= 0*/, bool bIsKillReward /*
 	{
 		// If you're using an NP modifying buff then add the bonus
 		nChangeAmount = m_bNPGainAmount * nChangeAmount / 100;
-		
+
 		// We should only apply NP bonuses when NP was gained as a reward for killing a player.
 		if (bIsKillReward)
 		{
@@ -606,8 +606,10 @@ void CUser::SendLoyaltyChange(int32 nChangeAmount /*= 0*/, bool bIsKillReward /*
 			if (isInPKZone() && g_pMain->m_nPVPMonumentNation[GetZoneID()] == GetNation())
 				nChangeAmount += PVP_MONUMENT_NP_BONUS;
 		}
+
 		if (g_pMain->m_byNpEventAmount > 0)
-			nChangeAmount = (100 + g_pMain->m_byNpEventAmount) / 100;
+			   nChangeAmount = (100 + g_pMain->m_byNpEventAmount) / 100;
+
 		if (m_iLoyalty + nChangeAmount > LOYALTY_MAX)
 			m_iLoyalty = LOYALTY_MAX;
 		else
@@ -1088,7 +1090,7 @@ void CUser::SetZoneAbilityChange(uint16 sNewZone)
 
 	if (sNewZone == ZONE_BIFROST || sNewZone == ZONE_BATTLE4  || sNewZone ==  ZONE_RONARK_LAND)
 		g_pMain->SendEventRemainingTime(false, this, (uint8)sNewZone);
-		
+
 	// Clear skill cooldowns...
 	m_RHitRepeatList.clear();
 	m_CoolDownList.clear();
@@ -2039,10 +2041,11 @@ void CUser::SetUserAbility(bool bSendPacket /*= true*/)
 	}
 
 	if (m_sACAmount < 0)
-		m_sACAmount = 0;
+ 		m_sACAmount = 0;
 
 	if (sItemDamage < 3)
 		sItemDamage = 3;
+
 
 	// Update stats based on item data
 	SetSlotItemValue();
@@ -2793,12 +2796,16 @@ void CUser::AppendExtraNoticeData(Packet & pkt, uint8 & elementCount)
 		g_pMain->GetServerResource(IDS_MONEY_REPAY_EVENT, &message, g_pMain->m_byCoinEventAmount);
 		AppendNoticeEntry(pkt, elementCount, message.c_str(), "Noah event"); 
 	}
+	
 	if (g_pMain->m_byNpEventAmount > 0)
-	{
-		g_pMain->GetServerResource(IDS_NP_REPAY_EVENT, &message, g_pMain->m_byNpEventAmount);
-		AppendNoticeEntry(pkt, elementCount, message.c_str(), "Noah event"); 
-	}
+ 	{
+ 		g_pMain->GetServerResource(IDS_NP_REPAY_EVENT, &message, g_pMain->m_byNpEventAmount);
+ 		AppendNoticeEntry(pkt, elementCount, message.c_str(), "NP event"); 
+ 	}
+
 }
+
+
 
 void CUser::SkillPointChange(Packet & pkt)
 {
@@ -2969,8 +2976,7 @@ void CUser::LoyaltyDivide(int16 tid, uint16 bonusNP /*= 0*/)
 		if (pUser == nullptr)
 			continue;
 
-		if (pUser->isAlive())
-		    pUser->SendLoyaltyChange(loyalty_source, true, false, pTUser->GetMonthlyLoyalty() > 0 ? true : false); 
+		pUser->SendLoyaltyChange(loyalty_source, true, false, pTUser->GetMonthlyLoyalty() > 0 ? true : false);
 	}
 
 	pTUser->SendLoyaltyChange(loyalty_target, true, false, pTUser->GetMonthlyLoyalty() > 0 ? true : false);
@@ -2987,8 +2993,8 @@ int16 CUser::GetLoyaltyDivideSource(uint8 totalmember)
 	else if (GetZoneID() == ZONE_RONARK_LAND)
 		nBaseLoyalty = RONARK_LAND_KILL_LOYALTY_SOURCE;
 	else if (GetZoneID() == ZONE_KROWAZ_DOMINION)
-	        nBaseLoyalty = (g_pMain->m_Loyalty_Other_Zone_Source / 100) * 20;
-        else
+		nBaseLoyalty = (g_pMain->m_Loyalty_Other_Zone_Source / 100) * 20;
+	else
 		nBaseLoyalty = OTHER_ZONE_KILL_LOYALTY_SOURCE;
 
 	int16 nMaxLoyalty = (nBaseLoyalty * 3) - 2;
@@ -3013,7 +3019,7 @@ int16 CUser::GetLoyaltyDivideTarget()
 	else if (GetZoneID() == ZONE_RONARK_LAND)
 		return RONARK_LAND_KILL_LOYALTY_TARGET;
 	else if (GetZoneID() == ZONE_KROWAZ_DOMINION)
-	        return (g_pMain->m_Loyalty_Other_Zone_Target / 100) * 20;
+		return (g_pMain->m_Loyalty_Other_Zone_Target / 100) * 20;
 	else
 		return OTHER_ZONE_KILL_LOYALTY_TARGET;
 
@@ -3878,9 +3884,8 @@ void CUser::SelectWarpList(Packet & pkt)
 		Send(&result);
 	}
 
-	ZoneChange(pWarp->sZone, pWarp->fX + rx, pWarp->fZ + rz);
 	if (GetZoneID() == pWarp->sZone && pWarp->dwPay > 0 && GetCoins() >= pWarp->dwPay)
-		GoldLose(pWarp->dwPay);
+ 		GoldLose(pWarp->dwPay);
 }
 
 void CUser::ServerChangeOk(Packet & pkt)
@@ -3922,13 +3927,13 @@ bool CUser::GetWarpList(int warp_group)
 			continue;
 
 		if (g_pMain->isWarOpen() 
-			&& ((g_pMain->m_byBattleZoneType != ZONE_ARDREAM 
-			&& ((*itr)->sZone == ZONE_ARDREAM 
-			|| (*itr)->sZone == ZONE_RONARK_LAND_BASE
-			|| (*itr)->sZone == ZONE_RONARK_LAND))
-			|| (g_pMain->m_byBattleZoneType == ZONE_ARDREAM 
-			&& (*itr)->sZone == ZONE_ARDREAM)))
-			continue;
+ 			&& ((g_pMain->m_byBattleZoneType != ZONE_ARDREAM 
+ 			&& ((*itr)->sZone == ZONE_ARDREAM 
+ 			|| (*itr)->sZone == ZONE_RONARK_LAND_BASE
+ 			|| (*itr)->sZone == ZONE_RONARK_LAND))
+ 			|| (g_pMain->m_byBattleZoneType == ZONE_ARDREAM 
+ 			&& (*itr)->sZone == ZONE_ARDREAM)))
+ 			continue;
 
 		result	<< (*itr)->sWarpID 
 			<< (*itr)->strWarpName << (*itr)->strAnnounce
@@ -4804,7 +4809,7 @@ int16 CUser::GetSavedMagicDuration(uint32 nSkillID)
 /**
 * @brief	Recasts any saved skills on login/zone change.
 */
-void CUser::RecastSavedMagic(bool bFillToMaxHealth)
+void CUser::RecastSavedMagic(uint8 buffType /* = 0*/)
 {
 	FastGuard lock(m_savedMagicLock);
 	UserSavedMagicMap castSet;
@@ -4819,8 +4824,18 @@ void CUser::RecastSavedMagic(bool bFillToMaxHealth)
 
 	foreach (itr, castSet)
 	{
-		MagicInstance instance;			
+		if (buffType > 0)
+		{
+			_MAGIC_TYPE4 * pType = g_pMain->m_Magictype4Array.GetData(itr->first);
 
+			if (pType == nullptr)
+				continue;
+
+			if (pType->bBuffType != buffType)
+				continue;
+		}
+
+		MagicInstance instance;
 		instance.sCasterID = GetID();
 		instance.sTargetID = GetID();
 		instance.nSkillID = itr->first;
@@ -4828,9 +4843,16 @@ void CUser::RecastSavedMagic(bool bFillToMaxHealth)
 
 		instance.Run();
 	}
+}
 
-	if (bFillToMaxHealth)
-		HpChange(GetMaxHealth());
+
+/**
+* @brief	Recasts any lockable scrolls on debuff.
+*/
+void CUser::RecastLockableScrolls(uint8 buffType)
+{
+	InitType4(false, buffType);
+	RecastSavedMagic(buffType);
 }
 
 /**

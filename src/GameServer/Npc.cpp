@@ -515,17 +515,17 @@ void CNpc::BattleMonumentProcess(CUser *pUser)
 }
 
 void CNpc::WarMonumentProcess(CUser *pUser)
-{
-	if (pUser)
-	{
-		Packet result(WIZ_CHAT, uint8(MONUMENT_NOTICE));
-		result << uint8(FORCE_CHAT) << pUser->GetNation() << pUser->GetName().c_str();
-		g_pMain->Send_Zone(&result, GetZoneID(), nullptr, Nation::ALL);
-
-		g_pMain->m_nPVPMonumentNation[GetZoneID()] = pUser->GetNation();
-		g_pMain->NpcUpdate(m_sSid, m_bMonster, pUser->GetNation(), pUser->GetNation() == KARUS ? WAR_KARUS_SPID : WAR_ELMORAD_SPID);
-	}
-}
+ {
+ 	if (pUser)
+ 	{
+ 		Packet result(WIZ_CHAT, uint8(MONUMENT_NOTICE));
+ 		result << uint8(FORCE_CHAT) << pUser->GetNation() << pUser->GetName().c_str();
+ 		g_pMain->Send_Zone(&result, GetZoneID(), nullptr, Nation::ALL);
+ 
+ 		g_pMain->m_nPVPMonumentNation[GetZoneID()] = pUser->GetNation();
+ 		g_pMain->NpcUpdate(m_sSid, m_bMonster, pUser->GetNation(), pUser->GetNation() == KARUS ? WAR_KARUS_SPID : WAR_ELMORAD_SPID);
+ 	}
+ }
 
 /*
 * @brief  Executes the nation monument process.

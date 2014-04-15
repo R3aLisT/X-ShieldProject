@@ -1617,7 +1617,7 @@ float CNpc::FindEnemyExpand(int nRX, int nRZ, float fCompDis, UnitType unitType)
 		FastGuard lock(pMap->m_lock);
 		CRegion *pRegion = &pMap->m_ppRegion[nRX][nRZ];
 
-		if (pRegion == nullptr || (pRegion && pRegion->m_RegionNpcArray.IsEmpty()))
+		if (pRegion == nullptr || (pRegion && pRegion->m_RegionUserArray.IsEmpty()))
 			return 0.0f;
 
 		foreach_stlmap (itr, pRegion->m_RegionNpcArray)
@@ -2916,7 +2916,7 @@ void CNpc::FindFriendRegion(int x, int z, MAP* pMap, _TargetHealer* pHealer, Mon
 	CRegion *pRegion = &pMap->m_ppRegion[x][z];
 
 	if (pRegion == nullptr)
-		return;
+ 		return;
 
 	__Vector3 vStart, vEnd;
 	float fDis = 0.0f, 

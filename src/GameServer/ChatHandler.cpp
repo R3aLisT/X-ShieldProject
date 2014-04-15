@@ -74,7 +74,7 @@ void CUser::InitChatCommands()
 		{ "exp_change",			&CUser::HandleExpChangeCommand,					"Change a player an exp" },
 		{ "gold_change",		&CUser::HandleGoldChangeCommand,				"Change a player an gold" },
 		{ "exp_add",			&CUser::HandleExpAddCommand,					"Sets the server-wide XP event. If bonusPercent is set to 0, the event is ended. Arguments: bonusPercent" },
-		{ "np_add",				&CUser::HandleNpAddCommand,						"Sets the server-wide Np event. If bonusPercent is set to 0, the event is ended. Arguments: bonusPercent" },
+		{ "np_add",				&CUser::HandleNpAddCommand,						"Sets the server-wide NP event. If bonusPercent is set to 0, the event is ended. Arguments: bonusPercent" },
 		{ "money_add",			&CUser::HandleMoneyAddCommand,					"Sets the server-wide coin event. If bonusPercent is set to 0, the event is ended. Arguments: bonusPercent" },
 		{ "permitconnect",		&CUser::HandlePermitConnectCommand,				"Player unban" },
 		{ "tp_all",				&CUser::HandleTeleportAllCommand,				"Players send to home zone." },
@@ -342,10 +342,9 @@ void CUser::SendDeathNotice(Unit * pKiller, DeathNoticeType noticeType)
 		<< uint16(GetX()) << uint16(GetZ());
 
 	if (isInArena())
-	SendToRegion(&result);
+		SendToRegion(&result);
 	else
-	SendToZone(&result, this);
-	
+	SendToZone(&result);
 }
 
 bool CUser::ProcessChatCommand(std::string & message)
@@ -443,15 +442,15 @@ COMMAND_HANDLER(CUser::HandleZoneChangeCommand)
 
 	// Behave as in official (we'll fix this later)
 	int nZoneID = atoi(vargs.front().c_str());
-	
+
 	_START_POSITION * pStartPosition = g_pMain->GetStartPosition(nZoneID);
-	if (pStartPosition == nullptr) 
-		return false;
-
-	ZoneChange(nZoneID, 
-		(float)(GetNation() == KARUS ? pStartPosition->sKarusX : pStartPosition->sElmoradX + myrand(0, pStartPosition->bRangeX)), 
-		(float)(GetNation() == KARUS ? pStartPosition->sKarusZ : pStartPosition->sElmoradZ + myrand(0, pStartPosition->bRangeZ)));
-
+ 	if (pStartPosition == nullptr) 
+ 		return false;
+ 
+ 	ZoneChange(nZoneID, 
+ 		(float)(GetNation() == KARUS ? pStartPosition->sKarusX : pStartPosition->sElmoradX + myrand(0, pStartPosition->bRangeX)), 
+ 		(float)(GetNation() == KARUS ? pStartPosition->sKarusZ : pStartPosition->sElmoradZ + myrand(0, pStartPosition->bRangeZ)));
+ 
 	return true;
 }
 
@@ -757,29 +756,30 @@ COMMAND_HANDLER(CUser::HandleExpAddCommand)
 	return true;
 }
 
-// Starts/stops the server NP event & sets its server-wide bonus.
-COMMAND_HANDLER(CUser::HandleNpAddCommand)
-{
-	if (!isGM())
-		return false;
+ // Starts/stops the server NP event & sets its server-wide bonus.
+ COMMAND_HANDLER(CUser::HandleNpAddCommand)
+ {
+ 	if (!isGM())
+ 		return false;
+ 
+ 	// Expects the bonus XP percent, e.g. '+np_add' for a +15 Np boost.
+ 	if (vargs.empty())
+ 	{
+ 		// send description
+ 		g_pMain->SendHelpDescription(this, "Example : +np_add Percent");
+ 		return true;
+ 	}
+ 
+ 	g_pMain->m_byNpEventAmount = (uint8) atoi(vargs.front().c_str());
+ 
+ 	// Don't send the announcement if we're turning the event off.
+ 	if (g_pMain->m_byNpEventAmount == 0)
+ 		return true;
+ 
+ 	g_pMain->SendFormattedResource(IDS_NP_REPAY_EVENT, Nation::ALL, false, g_pMain->m_byNpEventAmount);
+ 	return true;
+ }
 
-	// Expects the bonus XP percent, e.g. '+np_add' for a +15 Np boost.
-	if (vargs.empty())
-	{
-		// send description
-		g_pMain->SendHelpDescription(this, "Example : +np_add Percent");
-		return true;
-	}
-
-	g_pMain->m_byNpEventAmount = (uint8) atoi(vargs.front().c_str());
-
-	// Don't send the announcement if we're turning the event off.
-	if (g_pMain->m_byNpEventAmount == 0)
-		return true;
-
-	g_pMain->SendFormattedResource(IDS_NP_REPAY_EVENT, Nation::ALL, false, g_pMain->m_byNpEventAmount);
-	return true;
-}
 // Starts/stops the server coin event & sets its server-wide bonus.
 COMMAND_HANDLER(CUser::HandleMoneyAddCommand)
 {
@@ -991,7 +991,7 @@ COMMAND_HANDLER(CGameServerDlg::HandleWarResultCommand)
 		return true;
 	}
 
-	if (!isWarOpen())
+	if (m_byBattleOpen == NO_BATTLE)
 	{
 		// send description
 		printf("Warning : Battle is not open.\n");

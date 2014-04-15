@@ -53,6 +53,7 @@ public:
 	CDBProcess	m_DBProcess;
 	void WriteUserLogFile(std::string & logMessage);
 	int16   m_nLoginPort;
+
 	FILE *m_fpUser;
 };
 
